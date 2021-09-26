@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {
   useEffect,
   useState,
@@ -52,31 +53,28 @@ export default function ({navigation}) {
     TemperaturaInterna: '',
     TemperaturaExterna: '',
   });
+
   const [CalculoParede, setCalculoParede] = useState([]);
   const [dados1, setDados1] = useState([]);
-  const [Blocos, setBlocos] = useState([]);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
 
   const Dados = {
     ...state,
   };
+
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   async function itemBloco() {
     try {
       const response = await Api_bloco.get();
 
-      const Id = response.data.map(function (item) {
-        return item.material;
-      });
-
-      setBlocos(Id);
       setDados1(response.data);
     } catch (error) {
       console.log(error);
     }
   }
   async function Enviar() {
+    console.log(Dados)
     if (CalculoParede.length <= 3) {
       try {
         const resposta = await calcular_parede.post('', Dados);
@@ -98,6 +96,8 @@ export default function ({navigation}) {
     <View>
       <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
         <ScrollView>
+          <Text style={{ fontSize: 24, marginBottom: 25 }}>Parede</Text>
+
           <TextInput
             label="Área da Parede:"
             placeholder="M²"
@@ -118,9 +118,7 @@ export default function ({navigation}) {
                   key={item}
                   label={`Bloco ${item.material.nome} - ${
                     item.altura * 100
-                  }X${parseInt(item.largura * 100)}X${parseInt(
-                    item.comprimento * 100,
-                  )}`}
+                  }X${(item.largura * 100).toFixed(2)}X${(item.comprimento * 100).toFixed(2)}`}
                   value={item.id}
                 />
               ))}

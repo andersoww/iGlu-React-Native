@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
@@ -10,11 +11,11 @@ export default function () {
   const navegar = useNavigation();
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text></Text>
       <View style={styles.bottom}>
         <Appbar
-          style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          style={{ alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: '#B0E0E6'}}>
           <Appbar.Action
             icon="domain"
             size={30}
@@ -25,13 +26,24 @@ export default function () {
               // console.log(dados)
             }}
           />
+
           <Appbar.Action
             icon="home"
             size={30}
             onPress={() => {
-              console.log(dados)
+              navegar.navigate('teto');
             }}
           />
+
+          <Appbar.Action
+            icon="camera"
+            size={30}
+            onPress={() => {
+              console.log(dados)
+            }}
+            color= 'red'
+          />
+
           <Appbar.Action
             icon="monitor"
             size={30}
@@ -41,19 +53,13 @@ export default function () {
           />
 
           <Appbar.Action
-            icon="white-balance-sunny"
-            size={30}
-            onPress={() => {
-              navegar.navigate('insolacao');
-            }}
-          />
-          <Appbar.Action
             icon="account"
             size={30}
             onPress={() => {
               navegar.navigate('pessoa');
             }}
           />
+          
           <Appbar.Action
             icon="google-keep"
             size={30}
