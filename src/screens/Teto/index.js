@@ -1,31 +1,26 @@
 /* eslint-disable prettier/prettier */
-import React, {
-  useEffect,
-  useState,
-  useReducer,
-  useContext,
-} from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { Card, TextInput, Button, Divider } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
-import { listar_forro, calcular_teto, listar_telha } from '../../services/API';
-import { TesteContext } from '../../providers';
+import React, {useEffect, useState, useReducer, useContext} from 'react';
+import {View, Text, ScrollView} from 'react-native';
+import {Card, TextInput, Button, Divider} from 'react-native-paper';
+import {Picker} from '@react-native-picker/picker';
+import {listar_forro, calcular_teto, listar_telha} from '../../services/API';
+import {TesteContext} from '../../providers';
 
-export default function ({ navigation }) {
-  const { dados, setDados } = useContext(TesteContext);
+export default function ({navigation}) {
+  const {teto, setTeto} = useContext(TesteContext);
 
   const reducer = (state, action) => {
     switch (action.type) {
       case 'AreaPiso':
-        return { ...state, AreaPiso: action.payload };
+        return {...state, AreaPiso: action.payload};
       case 'Telha_id':
-        return { ...state, Telha_id: action.payload };
+        return {...state, Telha_id: action.payload};
       case 'ForroLaje_id':
-        return { ...state, ForroLaje_id: action.payload };
+        return {...state, ForroLaje_id: action.payload};
       case 'TemperaturaInterna':
-        return { ...state, TemperaturaInterna: action.payload };
+        return {...state, TemperaturaInterna: action.payload};
       case 'TemperaturaExterna':
-        return { ...state, TemperaturaExterna: action.payload };
+        return {...state, TemperaturaExterna: action.payload};
     }
   };
 
@@ -48,7 +43,6 @@ export default function ({ navigation }) {
   async function listarTelhas() {
     try {
       const response = await listar_telha.get();
-      console.log(response.data)
 
       setTelhas(response.data);
     } catch (error) {
@@ -58,7 +52,6 @@ export default function ({ navigation }) {
   async function ListarForro() {
     try {
       const response = await listar_forro.get();
-      console.log(response.data)
 
       setForro(response.data);
     } catch (error) {
@@ -67,12 +60,10 @@ export default function ({ navigation }) {
   }
 
   async function Enviar() {
-    console.log(Dados)
-
     try {
       const resposta = await calcular_teto.post('', Dados);
       const rest = resposta.data;
-      console.log(rest);
+      setTeto(rest);
     } catch (error) {
       console.log(error.message);
     }
@@ -85,23 +76,24 @@ export default function ({ navigation }) {
 
   return (
     <View>
-      <Card style={{ padding: 10, height: '100%', borderRadius: 10 }}>
+      <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
         <ScrollView>
-          <Text style={{ fontSize: 24, marginBottom: 25 }}>Teto</Text>
+          <Text style={{fontSize: 24, marginBottom: 25}}>Teto</Text>
 
           <TextInput
             label="Área do comodo (m²):"
             placeholder="M²"
             keyboardType="numeric"
-            onChangeText={text => dispatch({ type: 'AreaPiso', payload: text })}
+            onChangeText={text => dispatch({type: 'AreaPiso', payload: text})}
           />
-          <Divider style={{ height: 3, backgroundColor: 'red', marginTop: 5 }} />
+          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
           <View>
             <Text>Tipo do teto:</Text>
 
             <Picker
+              selectedValue={state.Telha_id}
               onValueChange={text =>
-                dispatch({ type: 'Telha_id', payload: text })
+                dispatch({type: 'Telha_id', payload: text})
               }>
               <Picker.Item label="Escolha uma Telha..." value="" />
               {telhas.map(item => (
@@ -114,8 +106,9 @@ export default function ({ navigation }) {
             </Picker>
 
             <Picker
+              selectedValue={state.ForroLaje_id}
               onValueChange={text =>
-                dispatch({ type: 'ForroLaje_id', payload: text })
+                dispatch({type: 'ForroLaje_id', payload: text})
               }>
               <Picker.Item label="Escolha um Forro ou Laje..." value="" />
               {forro.map(item => (
@@ -128,7 +121,7 @@ export default function ({ navigation }) {
             </Picker>
           </View>
 
-          <Divider style={{ height: 3, backgroundColor: 'red', marginTop: 5 }} />
+          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
 
           <View>
             <Text>Temperatura:</Text>
@@ -137,27 +130,25 @@ export default function ({ navigation }) {
               placeholder="Temperatura Interna"
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({ type: 'TemperaturaInterna', payload: text })
+                dispatch({type: 'TemperaturaInterna', payload: text})
               }
             />
             <TextInput
               placeholder="Temperatura Externa"
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({ type: 'TemperaturaExterna', payload: text })
+                dispatch({type: 'TemperaturaExterna', payload: text})
               }
             />
           </View>
           <Button
             onPress={() => {
               Enviar();
-              console.log(CalculoParede)
             }}>
             Clicar
           </Button>
           <Button
             onPress={() => {
-              setDados(CalculoParede)
               navigation.navigate('main');
             }}>
             Voltar

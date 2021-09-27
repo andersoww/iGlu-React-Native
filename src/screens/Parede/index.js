@@ -6,14 +6,14 @@ import React, {
   createContext,
   useContext,
 } from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Alert} from 'react-native';
 import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {Api_bloco, calcular_parede} from '../../services/API';
 import {TesteContext} from '../../providers';
 
 export default function ({navigation}) {
-  const {dados, setDados} = useContext(TesteContext);
+  const {setParede, parede} = useContext(TesteContext);
   const reducer = (state, action) => {
     switch (action.type) {
       case 'AreaP':
@@ -38,6 +38,22 @@ export default function ({navigation}) {
         return {...state, TemperaturaInterna: action.payload};
       case 'TemperaturaExterna':
         return {...state, TemperaturaExterna: action.payload};
+      case 'Limpar':
+        return {
+          ...(state = {
+            AreaP: '',
+            AreaVidro: '',
+            Orientacao: '',
+            Latitude: '',
+            Bloco_id: '',
+            CondutividadeReboco: '',
+            CondutividadeAssentamento: '',
+            EspessuraRExterna: '',
+            EspessuraRInterna: '',
+            TemperaturaInterna: '',
+            TemperaturaExterna: '',
+          }),
+        };
     }
   };
   const [state, dispatch] = useReducer(reducer, {
@@ -74,18 +90,23 @@ export default function ({navigation}) {
     }
   }
   async function Enviar() {
-    console.log(Dados)
-    if (CalculoParede.length <= 3) {
+    const contador = parede.Contador;
+    if (contador <= 4 ) {
       try {
         const resposta = await calcular_parede.post('', Dados);
         const rest = resposta.data;
-        console.log(rest);
-        CalculoParede.push(rest);
+
+        
+        let total =  parseInt(rest) + parede.valorT;
+        setParede({Contador: contador + 1, valorT: parseInt(total)});
+
+        navigation.navigate('main');
+        Alert.alert(`Parede ${parede.Contador} calculada com sucesso`);
       } catch (error) {
-        console.log(error.message);
+        Alert.alert('Você precisa informar todos os campos');
       }
     } else {
-      console.log('Limite Estourou ');
+      Alert.alert('Limite Estourou ');
     }
   }
   useEffect(() => {
@@ -96,7 +117,7 @@ export default function ({navigation}) {
     <View>
       <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
         <ScrollView>
-          <Text style={{ fontSize: 24, marginBottom: 25 }}>Parede</Text>
+          <Text style={{fontSize: 24, marginBottom: 25}}>Parede</Text>
 
           <TextInput
             label="Área da Parede:"
@@ -109,6 +130,7 @@ export default function ({navigation}) {
             <Text>Material da Parede:</Text>
 
             <Picker
+              selectedValue={state.Bloco_id}
               onValueChange={text =>
                 dispatch({type: 'Bloco_id', payload: text})
               }>
@@ -116,9 +138,9 @@ export default function ({navigation}) {
               {dados1.map(item => (
                 <Picker.Item
                   key={item}
-                  label={`Bloco ${item.material.nome} - ${
-                    item.altura * 100
-                  }X${(item.largura * 100).toFixed(2)}X${(item.comprimento * 100).toFixed(2)}`}
+                  label={`Bloco ${item.material.nome} - ${item.altura * 100}X${(
+                    item.largura * 100
+                  ).toFixed(2)}X${(item.comprimento * 100).toFixed(2)}`}
                   value={item.id}
                 />
               ))}
@@ -139,9 +161,14 @@ export default function ({navigation}) {
               />
 
               <Picker
+                selectedValue={state.Orientacao}
                 onValueChange={text =>
                   dispatch({type: 'Orientacao', payload: text})
                 }>
+                <Picker.Item
+                  label="Escolha uma orientação do Vidro...."
+                  value=""
+                />
                 <Picker.Item label="Sul" value="S" />
                 <Picker.Item label="Sudeste" value="SE" />
                 <Picker.Item label="Leste" value="E" />
@@ -215,14 +242,12 @@ export default function ({navigation}) {
           <Button
             onPress={() => {
               Enviar();
-              console.log(CalculoParede)
             }}>
             Clicar
           </Button>
           <Button
             onPress={() => {
-              setDados(CalculoParede)
-              navigation.navigate('main');
+              console.log(parede);
             }}>
             Voltar
           </Button>
