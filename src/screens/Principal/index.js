@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useContext} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView, Alert} from 'react-native';
 import {Appbar, Button, Card, Title} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {TesteContext} from '../../providers';
@@ -9,17 +9,17 @@ export default function () {
   const {teto, equipamento, iluminacao, pessoa, parede} =
     useContext(TesteContext);
 
-  const Iluminacao = 0 | iluminacao;
-  const Parede = 0 | parede.valorT;
-  const Equipamento = 0 | equipamento;
-  const Teto = 0 | teto;
-  const Pessoas = 0 | pessoa;
+  const Iluminacao = iluminacao.valorT;
+  const Parede = parede.valorT;
+  const Equipamento = equipamento.valorT;
+  const Teto = teto.valorT;
+  const Pessoas = pessoa.valorT;
 
   const navegar = useNavigation();
 
   return (
     <>
-      <ScrollView style={{height: '90%'}}>
+      <ScrollView style={{height: '80%'}}>
         <View>
           <Card style={{marginBottom: 5}}>
             <Card.Title
@@ -86,6 +86,12 @@ export default function () {
             </Card.Actions>
           </Card>
         </View>
+        <Button
+          onPress={() => {
+            Alert.alert(`Resultado é ${(Parede+Pessoas+Iluminacao+Teto+Equipamento)*3.96}`);
+          }}>
+          Converter BTU
+        </Button>
       </ScrollView>
 
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

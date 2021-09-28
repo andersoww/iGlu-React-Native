@@ -1,11 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {
-  useEffect,
-  useState,
-  useReducer,
-  createContext,
-  useContext,
-} from 'react';
+import React, {useEffect, useState, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
 import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
@@ -70,7 +64,6 @@ export default function ({navigation}) {
     TemperaturaExterna: '',
   });
 
-  const [CalculoParede, setCalculoParede] = useState([]);
   const [dados1, setDados1] = useState([]);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
 
@@ -91,13 +84,12 @@ export default function ({navigation}) {
   }
   async function Enviar() {
     const contador = parede.Contador;
-    if (contador <= 4 ) {
+    if (contador <= 4) {
       try {
         const resposta = await calcular_parede.post('', Dados);
         const rest = resposta.data;
 
-        
-        let total =  parseInt(rest) + parede.valorT;
+        let total = parseInt(rest) + parede.valorT;
         setParede({Contador: contador + 1, valorT: parseInt(total)});
 
         navigation.navigate('main');
@@ -244,12 +236,6 @@ export default function ({navigation}) {
               Enviar();
             }}>
             Clicar
-          </Button>
-          <Button
-            onPress={() => {
-              console.log(parede);
-            }}>
-            Voltar
           </Button>
         </ScrollView>
       </Card>

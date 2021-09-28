@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Alert} from 'react-native';
 import {Card, TextInput, Button, Divider} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {listar_forro, calcular_teto, listar_telha} from '../../services/API';
@@ -63,9 +63,11 @@ export default function ({navigation}) {
     try {
       const resposta = await calcular_teto.post('', Dados);
       const rest = resposta.data;
-      setTeto(rest);
+      setTeto({valorT: rest});
+      Alert.alert('Calculo de Teto Realizado');
+      navigation.navigate('main');
     } catch (error) {
-      console.log(error.message);
+      Alert.alert(`Preencha todos os Campos`);
     }
   }
 

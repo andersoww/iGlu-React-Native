@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Alert} from 'react-native';
 import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_pessoas} from '../../services/API';
@@ -22,19 +22,24 @@ export default function ({navigation}) {
     atividade: '',
     quantidade: '',
   });
-  const [CalculoParede, setCalculoParede] = useState([]);
 
   const Dados = {
     ...state,
   };
 
   async function Enviar() {
-    try {
-      const resposta = await calcular_pessoas.post('', Dados);
-      const rest = resposta.data;
-      setPessoa(rest)
-    } catch (error) {
-      console.log(error.message);
+    if (state.atividade && state.quantidade != '') {
+      try {
+        const resposta = await calcular_pessoas.post('', Dados);
+        const rest = resposta.data;
+        setPessoa({valorT: rest});
+        Alert.alert('Calculo de Pessoa Realizado');
+        navigation.navigate('main');
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      Alert.alert('Você precisa preencher todos os campos');
     }
   }
 
@@ -47,10 +52,11 @@ export default function ({navigation}) {
 
             <Text>Tipo de Atividede</Text>
             <Picker
-            selectedValue={state.atividade}
+              selectedValue={state.atividade}
               onValueChange={text =>
                 dispatch({type: 'atividade', payload: text})
               }>
+              <Picker.Item label="Escolha uma atividade ..." value="" />
               <Picker.Item label="Baixa" value="80" />
               <Picker.Item label="Média" value="150" />
               <Picker.Item label="Alta" value="500" />
@@ -69,7 +75,7 @@ export default function ({navigation}) {
             onPress={() => {
               Enviar();
             }}>
-            Clicar
+            Calcular
           </Button>
           <Button onPress={() => {}}>Voltar</Button>
         </ScrollView>

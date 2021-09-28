@@ -1,16 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView} from 'react-native';
-import {Card, TextInput, Button, Divider} from 'react-native-paper';
+import {View, Text, ScrollView, Alert} from 'react-native';
+import {Card, TextInput, Button} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
-import {
-  calcular_equipamentos,
-  calcular_parede,
-  listar_equipamentos,
-} from '../../services/API';
+import {calcular_equipamentos, listar_equipamentos} from '../../services/API';
 import {TesteContext} from '../../providers';
 
-export default function ({}) {
+export default function ({navigation}) {
   const {equipamento, setEquipamento} = useContext(TesteContext);
 
   const reducer = (state, action) => {
@@ -45,17 +41,29 @@ export default function ({}) {
   }
 
   async function Enviar() {
-    try {
-      const resposta = await calcular_equipamentos.post('', {
-        equipamentos: CalculoParede,
-      });
-      const rest = resposta.data;
-      setEquipamento(rest);
-    } catch (error) {
-      console.log(error.message);
+    if (CalculoParede.length !== 0) {
+      try {
+        const resposta = await calcular_equipamentos.post('', {
+          equipamentos: CalculoParede,
+        });
+        const rest = resposta.data;
+        setEquipamento({valorT: rest});
+        navigation.navigate('main');
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      Alert.alert('Você precisa adicionar algum equipemento para Calcular');
     }
   }
-
+  function Adicionar() {
+    if (state.equipamento.potencia && state.quantidade != '') {
+      CalculoParede.push(Dados);
+      Alert.alert(`Você cadastrou ${state.equipamento.nome}`);
+    } else {
+      Alert.alert('Você precisa escolher um equipamento');
+    }
+  }
   useEffect(() => {
     listarEquipamentos();
   }, []);
@@ -92,11 +100,11 @@ export default function ({}) {
             onPress={() => {
               Enviar();
             }}>
-            Enviar
+            Calcular
           </Button>
           <Button
             onPress={() => {
-              CalculoParede.push(Dados);
+              Adicionar();
             }}>
             Adicionar
           </Button>

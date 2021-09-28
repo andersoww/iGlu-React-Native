@@ -5,10 +5,10 @@ export const TesteContext = createContext({});
 
 export const Provider = ({children}) => {
   const [parede, setParede] = useState({Contador:1,valorT:0});
-  const [teto, setTeto] = useState({});
-  const [equipamento, setEquipamento] = useState({});
-  const [iluminacao, setIluminacao] = useState({});
-  const [pessoa, setPessoa] = useState({});
+  const [teto, setTeto] = useState({valorT:0});
+  const [equipamento, setEquipamento] = useState({valorT:0});
+  const [iluminacao, setIluminacao] = useState({valorT:0});
+  const [pessoa, setPessoa] = useState({valorT:0});
 
   return (
     <TesteContext.Provider

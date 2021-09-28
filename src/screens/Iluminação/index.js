@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import React, {useReducer, useContext} from 'react';
+import {View, Text, ScrollView, Alert} from 'react-native';
 import {Card, TextInput, Button} from 'react-native-paper';
 import {calculo_iluminacao} from '../../services/API';
 import {TesteContext} from '../../providers';
@@ -24,12 +24,18 @@ export default function ({navigation}) {
   };
 
   async function Enviar() {
-    try {
-      const resposta = await calculo_iluminacao.post('', Dados);
-      const rest = resposta.data;
-      setIluminacao(rest)
-    } catch (error) {
-      console.log(error.message);
+    if (state.area != '') {
+      try {
+        const resposta = await calculo_iluminacao.post('', Dados);
+        const rest = resposta.data;
+        setIluminacao({valorT: rest});
+        Alert.alert('Calculo de Iluminação Realizado');
+        navigation.navigate('main');
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      Alert.alert('Preencha Todos os Campos ');
     }
   }
 
@@ -51,9 +57,8 @@ export default function ({navigation}) {
             onPress={() => {
               Enviar();
             }}>
-            Clicar
+            Calcular
           </Button>
-          <Button onPress={() => {}}>Voltar</Button>
         </ScrollView>
       </Card>
     </View>
