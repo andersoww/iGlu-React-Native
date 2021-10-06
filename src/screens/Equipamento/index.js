@@ -62,8 +62,7 @@ export default function ({navigation}) {
   }
   function Adicionar() {
     if (state.equipamento.potencia && state.quantidade != '') {
-      setTeste(false);
-      setTeste(true);
+      setTeste(!teste);
       CalculoParede.push(Dados);
       Alert.alert(`Você cadastrou ${state.equipamento.nome}`);
     } else {
@@ -125,7 +124,7 @@ export default function ({navigation}) {
           data={CalculoParede}
           renderItem={render}
           keyExtractor={(item, index) => index}
-          extraData={teste}
+          refreshing={teste}
 
         />
       </Card>
