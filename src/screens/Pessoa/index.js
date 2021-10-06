@@ -77,7 +77,6 @@ export default function ({navigation}) {
             }}>
             Calcular
           </Button>
-          <Button onPress={() => {}}>Voltar</Button>
         </ScrollView>
       </Card>
     </View>

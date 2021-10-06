@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView, Alert} from 'react-native';
+import {View, Text, ScrollView, Alert, FlatList} from 'react-native';
 import {Card, TextInput, Button} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_equipamentos, listar_equipamentos} from '../../services/API';
@@ -19,6 +19,7 @@ export default function ({navigation}) {
   };
 
   const [state, dispatch] = useReducer(reducer, {
+    id: '',
     equipamento: '',
     quantidade: '',
   });
@@ -28,6 +29,7 @@ export default function ({navigation}) {
   const [equipamentos, setEquipamentos] = useState([]);
 
   const Dados = {
+    id: state.equipamento.id,
     potencia: state.equipamento.potencia,
     quantidade: state.quantidade,
   };
@@ -64,6 +66,10 @@ export default function ({navigation}) {
       Alert.alert('Você precisa escolher um equipamento');
     }
   }
+  const render = () => (
+    <View style={{width: 100, height: 100, backgroundColor: '#012'}}></View>
+  );
+
   useEffect(() => {
     listarEquipamentos();
   }, []);
@@ -71,44 +77,53 @@ export default function ({navigation}) {
   return (
     <View>
       <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
-        <ScrollView>
-          <Text style={{fontSize: 24, marginBottom: 25}}>Equipamentos</Text>
+        <Text style={{fontSize: 24, marginBottom: 25}}>Equipamentos</Text>
 
-          <View>
-            <Text>Tipo do teto:</Text>
+        <View>
+          <Text>Tipo do teto:</Text>
 
-            <Picker
-              selectedValue={state.equipamento}
-              onValueChange={text =>
-                dispatch({type: 'equipamento', payload: text})
-              }>
-              <Picker.Item label="Escolha um Equipamento..." value="" />
-              {equipamentos.map(item => (
-                <Picker.Item key={item} label={item.nome} value={item} />
-              ))}
-            </Picker>
+          <Picker
+            selectedValue={state.equipamento}
+            onValueChange={text =>
+              dispatch({type: 'equipamento', payload: text})
+            }>
+            <Picker.Item label="Escolha um Equipamento..." value="" />
+            {equipamentos.map(item => (
+              <Picker.Item key={item} label={item.nome} value={item} />
+            ))}
+          </Picker>
 
-            <TextInput
-              placeholder="Quantidade"
-              keyboardType="numeric"
-              onChangeText={text =>
-                dispatch({type: 'quantidade', payload: text})
-              }
-            />
-          </View>
-          <Button
-            onPress={() => {
-              Enviar();
-            }}>
-            Calcular
-          </Button>
-          <Button
-            onPress={() => {
-              Adicionar();
-            }}>
-            Adicionar
-          </Button>
-        </ScrollView>
+          <TextInput
+            placeholder="Quantidade"
+            keyboardType="numeric"
+            onChangeText={text => dispatch({type: 'quantidade', payload: text})}
+          />
+        </View>
+        <Button
+          onPress={() => {
+            Enviar();
+          }}>
+          Calcular
+        </Button>
+        <Button
+          onPress={() => {
+            Adicionar();
+          }}>
+          Adicionar
+        </Button>
+        <Button
+          onPress={() => {
+            console.log(CalculoParede);
+          }}>
+          Teste
+        </Button>
+        <FlatList
+          data={CalculoParede}
+          renderItem={render}
+          keyExtractor={(item, index) => item + index}
+          refreshing={CalculoParede}
+
+        />
       </Card>
     </View>
   );

@@ -32,7 +32,6 @@ export default function ({navigation}) {
     TemperaturaExterna: '',
   });
 
-  const [CalculoParede, setCalculoParede] = useState([]);
   const [telhas, setTelhas] = useState([]);
   const [forro, setForro] = useState([]);
 
@@ -148,12 +147,6 @@ export default function ({navigation}) {
               Enviar();
             }}>
             Clicar
-          </Button>
-          <Button
-            onPress={() => {
-              navigation.navigate('main');
-            }}>
-            Voltar
           </Button>
         </ScrollView>
       </Card>

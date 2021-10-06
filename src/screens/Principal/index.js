@@ -6,8 +6,18 @@ import {useNavigation} from '@react-navigation/native';
 import {TesteContext} from '../../providers';
 
 export default function () {
-  const {teto, equipamento, iluminacao, pessoa, parede} =
-    useContext(TesteContext);
+  const {
+    teto,
+    equipamento,
+    iluminacao,
+    pessoa,
+    parede,
+    setTeto,
+    setEquipamento,
+    setIluminacao,
+    setPessoa,
+    setParede,
+  } = useContext(TesteContext);
 
   const Iluminacao = iluminacao.valorT;
   const Parede = parede.valorT;
@@ -30,7 +40,12 @@ export default function () {
               <Title>{Iluminacao}</Title>
             </Card.Content>
             <Card.Actions>
-              <Button>Limpar</Button>
+              <Button
+                onPress={() => {
+                  setIluminacao({Contador: 1, valorT: 0});
+                }}>
+                Limpar
+              </Button>
             </Card.Actions>
           </Card>
 
@@ -43,7 +58,12 @@ export default function () {
               <Title>{Parede}</Title>
             </Card.Content>
             <Card.Actions>
-              <Button>Limpar</Button>
+              <Button
+                onPress={() => {
+                  setParede({Contador: 1, valorT: 0});
+                }}>
+                Limpar
+              </Button>
             </Card.Actions>
           </Card>
 
@@ -56,7 +76,12 @@ export default function () {
               <Title>{Teto}</Title>
             </Card.Content>
             <Card.Actions>
-              <Button>Limpar</Button>
+              <Button
+                onPress={() => {
+                  setTeto({Contador: 1, valorT: 0});
+                }}>
+                Limpar
+              </Button>
             </Card.Actions>
           </Card>
 
@@ -69,7 +94,12 @@ export default function () {
               <Title>{Equipamento}</Title>
             </Card.Content>
             <Card.Actions>
-              <Button>Limpar</Button>
+              <Button
+                onPress={() => {
+                  setEquipamento({Contador: 1, valorT: 0});
+                }}>
+                Limpar
+              </Button>
             </Card.Actions>
           </Card>
 
@@ -82,13 +112,22 @@ export default function () {
               <Title>{Pessoas}</Title>
             </Card.Content>
             <Card.Actions>
-              <Button>Limpar</Button>
+              <Button
+                onPress={() => {
+                  setPessoa({Contador: 1, valorT: 0});
+                }}>
+                Limpar
+              </Button>
             </Card.Actions>
           </Card>
         </View>
         <Button
           onPress={() => {
-            Alert.alert(`Resultado é ${(Parede+Pessoas+Iluminacao+Teto+Equipamento)*3.96}`);
+            Alert.alert(
+              `Resultado é ${
+                (Parede + Pessoas + Iluminacao + Teto + Equipamento) * 3.96
+              }`,
+            );
           }}>
           Converter BTU
         </Button>
@@ -117,15 +156,6 @@ export default function () {
               onPress={() => {
                 navegar.navigate('teto');
               }}
-            />
-
-            <Appbar.Action
-              icon="camera"
-              size={30}
-              onPress={() => {
-                console.log(dados);
-              }}
-              color="red"
             />
 
             <Appbar.Action
