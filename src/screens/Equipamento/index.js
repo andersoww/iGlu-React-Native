@@ -28,6 +28,8 @@ export default function ({navigation}) {
   const [CalculoEquipamento, setCalculoEquipamento] = useState([]);
   const [equipamentos, setEquipamentos] = useState([]);
 
+  const [teste, setTeste] = useState(false);
+
   const Dados = {
     id: state.equipamento.id,
     potencia: state.equipamento.potencia,
@@ -60,6 +62,8 @@ export default function ({navigation}) {
   }
   function Adicionar() {
     if (state.equipamento.potencia && state.quantidade != '') {
+      setTeste(false);
+      setTeste(true);
       CalculoParede.push(Dados);
       Alert.alert(`Você cadastrou ${state.equipamento.nome}`);
     } else {
@@ -67,7 +71,7 @@ export default function ({navigation}) {
     }
   }
   const render = () => (
-    <View style={{width: 100, height: 100, backgroundColor: '#012'}}></View>
+    <View style={{width: 100, height: 100, marginBottom: 5 , backgroundColor: '#012'}}></View>
   );
 
   useEffect(() => {
@@ -120,8 +124,8 @@ export default function ({navigation}) {
         <FlatList
           data={CalculoParede}
           renderItem={render}
-          keyExtractor={(item, index) => item + index}
-          refreshing={CalculoParede}
+          keyExtractor={(item, index) => index}
+          extraData={teste}
 
         />
       </Card>
