@@ -1,21 +1,24 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
+import {View, Text, Alert, FlatList, TouchableOpacity} from 'react-native';
 import {
-  View,
-  Text,
-  ScrollView,
-  Alert,
-  FlatList,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import {Card, TextInput, Button, IconButton} from 'react-native-paper';
+  Title_Equipament,
+  Card_Equipament,
+  Container_Home,
+  Container_Input,
+  Button_Send,
+  Button_Remove,
+  Container_List_Equipament,
+  Container_List_Equipament_Title,
+  Card_List_Equipament,
+} from './style';
+import {TextInput, IconButton, Avatar} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_equipamentos, listar_equipamentos} from '../../services/API';
 import {TesteContext} from '../../providers';
 
 export default function ({navigation}) {
+  //Estado Global para compartilhar o resultado do Calculo para Dashbord
   const {equipamento, setEquipamento} = useContext(TesteContext);
 
   const reducer = (state, action) => {
@@ -26,41 +29,39 @@ export default function ({navigation}) {
         return {...state, quantidade: action.payload};
     }
   };
-
+  //Hook para armazenas os valores dos Equipamentos
   const [state, dispatch] = useReducer(reducer, {
     id: '',
     nome: '',
     equipamento: '',
     quantidade: '',
   });
-
-  const [CalculoParede, setCalculoParede] = useState([]);
-  const [CalculoEquipamento, setCalculoEquipamento] = useState();
-  const [equipamentos, setEquipamentos] = useState([]);
+  //Hook para armazenas os itens que foram selecionados para fazer o calculo de Equipamentos
+  const [selectedList, setSelectedList] = useState([]);
+  //Hook para armazenar a posição no array "equipament" para fazer alguma coisa (Função Remover)
+  const [index, setIndex] = useState();
+  //Hook para armazenar a lista de equipamentos carregados da API
+  const [equipament, setEquipament] = useState([]);
+  //Hook para armazear o id do item selecionado
   const [selected, setSelected] = useState();
+  //Hook para armazenas uma boolean, para auxixiar no FlatList (renderização tempo real)
+  const [refresh, setRefresh] = useState(false);
 
-  const [teste, setTeste] = useState(false);
-
-  const Dados = {
-    id: state.equipamento.id,
-    nome: state.equipamento.nome,
-    potencia: state.equipamento.potencia,
-    quantidade: state.quantidade,
-  };
+  //Função Para listar os equipamentos da API
   async function listarEquipamentos() {
     try {
       const response = await listar_equipamentos.get();
-      setEquipamentos(response.data);
+      setEquipament(response.data);
     } catch (error) {
       console.log(error);
     }
   }
-
-  async function Enviar() {
-    if (CalculoParede.length !== 0) {
+  //Função para fazer uma requisição e retornar o resultado do calculo da API
+  async function Send() {
+    if (selectedList.length !== 0) {
       try {
         const resposta = await calcular_equipamentos.post('', {
-          equipamentos: CalculoParede,
+          equipamentos: selectedList,
         });
         const rest = resposta.data;
         setEquipamento({valorT: rest});
@@ -72,28 +73,48 @@ export default function ({navigation}) {
       Alert.alert('Você precisa adicionar algum equipemento para Calcular');
     }
   }
-  function Adicionar() {
-    if (buscarRepeticao(state.equipamento.id)) {
+  //Função para adicionar um equipamento em um array de Equipamentos
+  function Add() {
+    const Dados = {
+      id: state.equipamento.id,
+      nome: state.equipamento.nome,
+      potencia: state.equipamento.potencia,
+      quantidade: state.quantidade,
+    };
+    if (SearchRepetition(state.equipamento.id)) {
       Alert.alert('Este Equipamento já foi adicionado');
-      return;
     } else if (state.equipamento.potencia && state.quantidade != '') {
-      setTeste(!teste);
-      CalculoParede.push(Dados);
+      setRefresh(!refresh);
+      selectedList.push(Dados);
       Alert.alert(`Você cadastrou ${state.equipamento.nome}`);
     } else {
       Alert.alert('Você precisa escolher um equipamento');
     }
   }
+  //Função para selecionar um equipamento, para armazenar seu id
   function SelectedProduct(item) {
     setSelected(item.id);
-    const filtered = CalculoParede.findIndex(function (el) {
+    const filtered = selectedList.findIndex(function (el) {
       return el.id == item.id;
     });
 
-    setCalculoEquipamento(filtered);
+    setIndex(filtered);
 
     return;
   }
+  //Função para remover um equipamento em um array de Equipamentos
+  function Remove() {
+    //Zerar esse hook para resetar o ultimo item removido
+    setIndex(null);
+    if (index != null) {
+      selectedList.splice(index, 1);
+      setRefresh(!refresh);
+      setSelected(null);
+    } else {
+      Alert.alert('Você precisa selecionar algum item para Remover');
+    }
+  }
+  // Arrow Function para renderizar elemento na FlatList
   const render = ({item}) => (
     <TouchableOpacity
       style={{
@@ -111,7 +132,12 @@ export default function ({navigation}) {
       onPress={() => {
         SelectedProduct(item);
       }}>
-      <Image style={{height: 80, width: 80, backgroundColor: '#012'}} />
+      <Avatar.Icon
+        size={64}
+        icon="monitor"
+        color="black"
+        style={{backgroundColor: '#fff'}}
+      />
 
       <View
         style={{
@@ -138,19 +164,10 @@ export default function ({navigation}) {
       </View>
     </TouchableOpacity>
   );
-  function Remover() {
-    setCalculoEquipamento(null);
-    if (CalculoEquipamento != null) {
-      CalculoParede.splice(CalculoEquipamento, 1);
-      setTeste(!teste);
-      setSelected(null);
-    }else {
-      Alert.alert('Você precisa selecionar algum item para Remover')
-    }
-  }
-  function buscarRepeticao(valor) {
+
+  function SearchRepetition(valor) {
     var value;
-    if ((value = CalculoParede.find(item => item.id == valor))) return value;
+    if ((value = selectedList.find(item => item.id == valor))) return value;
   }
 
   useEffect(() => {
@@ -158,79 +175,70 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <SafeAreaView style={{padding: 10, flex: 1}}>
-      <Card style={{padding: 10, borderRadius: 10}}>
-        <Text style={{fontSize: 24, marginBottom: 25}}>Equipamentos</Text>
+    <Container_Home>
+      <Card_Equipament>
+        <Title_Equipament>Equipamentos</Title_Equipament>
 
-        <View>
-          <Text>Tipo do teto:</Text>
+        <Text>Tipo do teto:</Text>
+        <Picker
+          selectedValue={state.equipamento}
+          onValueChange={text =>
+            dispatch({type: 'equipamento', payload: text})
+          }>
+          <Picker.Item label="Escolha um Equipamento..." value="" />
+          {equipament.map(item => (
+            <Picker.Item key={item} label={item.nome} value={item} />
+          ))}
+        </Picker>
 
-          <Picker
-            selectedValue={state.equipamento}
-            onValueChange={text =>
-              dispatch({type: 'equipamento', payload: text})
-            }>
-            <Picker.Item label="Escolha um Equipamento..." value="" />
-            {equipamentos.map(item => (
-              <Picker.Item key={item} label={item.nome} value={item} />
-            ))}
-          </Picker>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={{marginRight: 10}}
-              placeholder="Quantidade"
-              keyboardType="numeric"
-              onChangeText={text =>
-                dispatch({type: 'quantidade', payload: text})
-              }
-            />
-            <IconButton
-              icon="plus"
-              color="red"
-              style={{backgroundColor: '#012'}}
-              onPress={() => {
-                Adicionar();
-              }}
-            />
-          </View>
-        </View>
-        <Button
+        <Container_Input>
+          <TextInput
+            style={{marginRight: 10}}
+            placeholder="Quantidade"
+            keyboardType="numeric"
+            onChangeText={text => dispatch({type: 'quantidade', payload: text})}
+          />
+          <IconButton
+            icon="plus"
+            color="red"
+            style={{backgroundColor: '#012'}}
+            onPress={() => {
+              Add();
+            }}
+          />
+        </Container_Input>
+        <Button_Send
           onPress={() => {
-            Enviar();
+            Send();
           }}>
           Calcular
-        </Button>
-        <Button
+        </Button_Send>
+        <Button_Remove
           onPress={() => {
-            Remover();
+            Remove();
           }}>
           Remover
-        </Button>
-        <Button
-          onPress={() => {
-            console.log(selected);
-          }}>
-          Teste
-        </Button>
-      </Card>
-      <View style={{marginTop: 20, marginBottom: 40, flex: 1}}>
-        <Card>
-          <View
+        </Button_Remove>
+      </Card_Equipament>
+
+      <Container_List_Equipament>
+        <Card_List_Equipament>
+          <Container_List_Equipament_Title
             style={{
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: 5,
             }}>
             <Text style={{fontSize: 28}}>Lista de Equipamentos:</Text>
-          </View>
+          </Container_List_Equipament_Title>
           <FlatList
-            data={CalculoParede}
+            data={selectedList}
             renderItem={render}
             keyExtractor={(item, index) => index}
-            refreshing={teste}
+            refreshing={refresh}
           />
-        </Card>
-      </View>
-    </SafeAreaView>
+        </Card_List_Equipament>
+      </Container_List_Equipament>
+    </Container_Home>
   );
 }
