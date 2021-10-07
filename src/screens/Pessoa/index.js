@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState, useReducer, useContext} from 'react';
+import React, {useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_pessoas} from '../../services/API';
 import {TesteContext} from '../../providers';
+
+import { Container, Card_Pessoas, Title_Pessoas} from './styles';
 
 export default function ({navigation}) {
   const {setPessoa} = useContext(TesteContext);
@@ -28,7 +30,7 @@ export default function ({navigation}) {
   };
 
   async function Enviar() {
-    if (state.atividade && state.quantidade != '') {
+    if (state.atividade && state.quantidade !== '') {
       try {
         const resposta = await calcular_pessoas.post('', Dados);
         const rest = resposta.data;
@@ -44,11 +46,11 @@ export default function ({navigation}) {
   }
 
   return (
-    <View>
-      <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
+    <Container>
+      <Card_Pessoas>
         <ScrollView>
           <View>
-            <Text style={{fontSize: 24, marginBottom: 25}}>Pessoas</Text>
+            <Title_Pessoas>Pessoas</Title_Pessoas>
 
             <Text>Tipo de Atividede</Text>
             <Picker
@@ -78,7 +80,7 @@ export default function ({navigation}) {
             Calcular
           </Button>
         </ScrollView>
-      </Card>
-    </View>
+      </Card_Pessoas>
+    </Container>
   );
 }

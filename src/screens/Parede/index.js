@@ -1,37 +1,39 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState, useReducer, useContext} from 'react';
-import {View, Text, ScrollView, Alert} from 'react-native';
-import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
-import {Picker} from '@react-native-picker/picker';
-import {Api_bloco, calcular_parede} from '../../services/API';
-import {TesteContext} from '../../providers';
+import React, { useEffect, useState, useReducer, useContext } from 'react';
+import { View, Text, ScrollView, Alert } from 'react-native';
+import { Card, TextInput, Button, Switch, Divider } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
+import { Api_bloco, calcular_parede } from '../../services/API';
+import { TesteContext } from '../../providers';
 
-export default function ({navigation}) {
-  const {setParede, parede} = useContext(TesteContext);
+import { Card_Parede, Container, Title_Parede } from './styles';
+
+export default function ({ navigation }) {
+  const { setParede, parede } = useContext(TesteContext);
   const reducer = (state, action) => {
     switch (action.type) {
       case 'AreaP':
-        return {...state, AreaP: action.payload};
+        return { ...state, AreaP: action.payload };
       case 'AreaVidro':
-        return {...state, AreaVidro: action.payload};
+        return { ...state, AreaVidro: action.payload };
       case 'Orientacao':
-        return {...state, Orientacao: action.payload};
+        return { ...state, Orientacao: action.payload };
       case 'Latitude':
-        return {...state, Latitude: action.payload};
+        return { ...state, Latitude: action.payload };
       case 'Bloco_id':
-        return {...state, Bloco_id: action.payload};
+        return { ...state, Bloco_id: action.payload };
       case 'CondutividadeReboco':
-        return {...state, CondutividadeReboco: action.payload};
+        return { ...state, CondutividadeReboco: action.payload };
       case 'CondutividadeAssentamento':
-        return {...state, CondutividadeAssentamento: action.payload};
+        return { ...state, CondutividadeAssentamento: action.payload };
       case 'EspessuraRExterna':
-        return {...state, EspessuraRExterna: action.payload};
+        return { ...state, EspessuraRExterna: action.payload };
       case 'EspessuraRInterna':
-        return {...state, EspessuraRInterna: action.payload};
+        return { ...state, EspessuraRInterna: action.payload };
       case 'TemperaturaInterna':
-        return {...state, TemperaturaInterna: action.payload};
+        return { ...state, TemperaturaInterna: action.payload };
       case 'TemperaturaExterna':
-        return {...state, TemperaturaExterna: action.payload};
+        return { ...state, TemperaturaExterna: action.payload };
       case 'Limpar':
         return {
           ...(state = {
@@ -65,7 +67,7 @@ export default function ({navigation}) {
   });
 
   const [dados1, setDados1] = useState([]);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(true);
 
   const Dados = {
     ...state,
@@ -89,8 +91,8 @@ export default function ({navigation}) {
         const resposta = await calcular_parede.post('', Dados);
         const rest = resposta.data;
 
-        let total = parseInt(rest) + parede.valorT;
-        setParede({Contador: contador + 1, valorT: parseInt(total)});
+        let total = parseFloat(rest) + parede.valorT;
+        setParede({ Contador: contador + 1, valorT: total.toFixed(2) });
 
         navigation.navigate('main');
         Alert.alert(`Parede ${parede.Contador} calculada com sucesso`);
@@ -106,25 +108,24 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <View>
-      <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
-        <ScrollView>
-          <Text style={{fontSize: 24, marginBottom: 25}}>Parede</Text>
+    <Container>
+      <ScrollView>
+        <Card_Parede>
+          <Title_Parede>Parede</Title_Parede>
 
           <TextInput
             label="Área da Parede:"
             placeholder="M²"
             keyboardType="numeric"
-            onChangeText={text => dispatch({type: 'AreaP', payload: text})}
+            onChangeText={text => dispatch({ type: 'AreaP', payload: text })}
           />
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
           <View>
             <Text>Material da Parede:</Text>
 
             <Picker
               selectedValue={state.Bloco_id}
               onValueChange={text =>
-                dispatch({type: 'Bloco_id', payload: text})
+                dispatch({ type: 'Bloco_id', payload: text })
               }>
               <Picker.Item label="Escolha uma Material..." value="" />
               {dados1.map(item => (
@@ -138,62 +139,70 @@ export default function ({navigation}) {
               ))}
             </Picker>
           </View>
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
-          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
-          {isSwitchOn && (
-            <View>
-              <Text>Vidro:</Text>
-              <TextInput
-                label="Área do Vidro:"
-                placeholder="M²"
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'AreaVidro', payload: text})
-                }
-              />
+        </Card_Parede>
 
-              <Picker
-                selectedValue={state.Orientacao}
-                onValueChange={text =>
-                  dispatch({type: 'Orientacao', payload: text})
-                }>
-                <Picker.Item
-                  label="Escolha uma orientação do Vidro...."
-                  value=""
-                />
-                <Picker.Item label="Sul" value="S" />
-                <Picker.Item label="Sudeste" value="SE" />
-                <Picker.Item label="Leste" value="E" />
-                <Picker.Item label="Nordeste" value="NE" />
-                <Picker.Item label="Norte" value="N" />
-                <Picker.Item label="Noroeste" value="NO" />
-                <Picker.Item label="Oeste" value="O" />
-                <Picker.Item label="Sudoeste" value="SO" />
-              </Picker>
-              <TextInput
-                placeholder="Latitude"
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'Latitude', payload: text})
-                }
+        <View style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center', marginBottom: 10 }}>
+          <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Text>Contém vidro?</Text>
+            <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color='red' ios_backgroundColor='red'/>
+          </View>
+        </View>
+
+        {isSwitchOn && (
+          <Card_Parede>
+            <Text>Vidro:</Text>
+            <TextInput
+              label="Área Total de Vidro"
+              placeholder="M²"
+              keyboardType="numeric"
+              onChangeText={text =>
+                dispatch({ type: 'AreaVidro', payload: text })
+              }
+            />
+
+            <Picker
+              selectedValue={state.Orientacao}
+              onValueChange={text =>
+                dispatch({ type: 'Orientacao', payload: text })
+              }>
+              <Picker.Item
+                label="Escolha uma orientação do Vidro...."
+                value=""
               />
-            </View>
-          )}
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
+              <Picker.Item label="Sul" value="S" />
+              <Picker.Item label="Sudeste" value="SE" />
+              <Picker.Item label="Leste" value="E" />
+              <Picker.Item label="Nordeste" value="NE" />
+              <Picker.Item label="Norte" value="N" />
+              <Picker.Item label="Noroeste" value="NO" />
+              <Picker.Item label="Oeste" value="O" />
+              <Picker.Item label="Sudoeste" value="SO" />
+            </Picker>
+            <TextInput
+              placeholder="Latitude"
+              keyboardType="numeric"
+              onChangeText={text =>
+                dispatch({ type: 'Latitude', payload: text })
+              }
+            />
+          </Card_Parede>
+        )}
+        <Card_Parede>
+
           <View>
             <Text>Reboco:</Text>
             <TextInput
               placeholder="Condutividade do Reboco "
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'CondutividadeReboco', payload: text})
+                dispatch({ type: 'CondutividadeReboco', payload: text })
               }
             />
             <TextInput
               placeholder="Condutividade do Material Assentamento do Bloco "
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'CondutividadeAssentamento', payload: text})
+                dispatch({ type: 'CondutividadeAssentamento', payload: text })
               }
             />
 
@@ -201,18 +210,17 @@ export default function ({navigation}) {
               placeholder="Espessura Reboco Interno "
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'EspessuraRInterna', payload: text})
+                dispatch({ type: 'EspessuraRInterna', payload: text })
               }
             />
             <TextInput
               placeholder="Espessura Reboco Externo"
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'EspessuraRExterna', payload: text})
+                dispatch({ type: 'EspessuraRExterna', payload: text })
               }
             />
           </View>
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
           <View>
             <Text>Temperatura:</Text>
 
@@ -220,14 +228,14 @@ export default function ({navigation}) {
               placeholder="Temperatura Interna "
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'TemperaturaInterna', payload: text})
+                dispatch({ type: 'TemperaturaInterna', payload: text })
               }
             />
             <TextInput
               placeholder="Temperatura Externa"
               keyboardType="numeric"
               onChangeText={text =>
-                dispatch({type: 'TemperaturaExterna', payload: text})
+                dispatch({ type: 'TemperaturaExterna', payload: text })
               }
             />
           </View>
@@ -237,8 +245,8 @@ export default function ({navigation}) {
             }}>
             Clicar
           </Button>
-        </ScrollView>
-      </Card>
-    </View>
+        </Card_Parede>
+      </ScrollView>
+    </Container>
   );
 }
