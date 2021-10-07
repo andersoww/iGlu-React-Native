@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import {Card, TextInput, Button, Divider} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {listar_forro, calcular_teto, listar_telha} from '../../services/API';
-import {TesteContext} from '../../providers';
+import { TesteContext } from '../../providers';
+
+import { Card_Teto, Container, Title_Teto} from './styles';
 
 export default function ({navigation}) {
   const {teto, setTeto} = useContext(TesteContext);
@@ -66,7 +68,7 @@ export default function ({navigation}) {
       Alert.alert('Calculo de Teto Realizado');
       navigation.navigate('main');
     } catch (error) {
-      Alert.alert(`Preencha todos os Campos`);
+      Alert.alert('Preencha todos os Campos');
     }
   }
 
@@ -76,10 +78,10 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <View>
-      <Card style={{padding: 10, height: '100%', borderRadius: 10}}>
+    <Container>
+      <Card_Teto>
         <ScrollView>
-          <Text style={{fontSize: 24, marginBottom: 25}}>Teto</Text>
+          <Title_Teto>Teto</Title_Teto>
 
           <TextInput
             label="Área do comodo (m²):"
@@ -87,7 +89,6 @@ export default function ({navigation}) {
             keyboardType="numeric"
             onChangeText={text => dispatch({type: 'AreaPiso', payload: text})}
           />
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
           <View>
             <Text>Tipo do teto:</Text>
 
@@ -122,8 +123,6 @@ export default function ({navigation}) {
             </Picker>
           </View>
 
-          <Divider style={{height: 3, backgroundColor: 'red', marginTop: 5}} />
-
           <View>
             <Text>Temperatura:</Text>
 
@@ -149,7 +148,7 @@ export default function ({navigation}) {
             Clicar
           </Button>
         </ScrollView>
-      </Card>
-    </View>
+      </Card_Teto>
+    </Container>
   );
 }
