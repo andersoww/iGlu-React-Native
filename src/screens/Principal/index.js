@@ -17,6 +17,7 @@ export default function () {
     setIluminacao,
     setPessoa,
     setParede,
+    infoInitial,
   } = useContext(TesteContext);
 
   const Iluminacao = iluminacao.valorT;
@@ -130,6 +131,12 @@ export default function () {
             );
           }}>
           Converter BTU
+        </Button>
+        <Button
+          onPress={() => {
+            console.log(infoInitial);
+          }}>
+          Teste
         </Button>
       </ScrollView>
 
