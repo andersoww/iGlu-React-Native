@@ -1,11 +1,17 @@
 import axios from 'axios';
 import React, {useReducer, useState, useEffect, useContext} from 'react';
 import {Alert, Platform, View, PermissionsAndroid} from 'react-native';
-import {Button, Card, TextInput, IconButton} from 'react-native-paper';
+import {
+  Button,
+  Card,
+  TextInput,
+  IconButton,
+  Appbar,
+  Title,
+} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import Geolocation from '@react-native-community/geolocation';
 import {TesteContext} from '../../providers';
-import {Icon} from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
 
 export default function ({navigation}) {
   const {setInfoInitial} = useContext(TesteContext);
@@ -35,27 +41,40 @@ export default function ({navigation}) {
     TemperaturaE: '',
     Latitude: '',
   });
-
+  function Call(p) {
+    if (p == 1) {
+      Alert.alert('Você precisa permitir que o aplicativo acesse o gps');
+    } else if (p == 2) {
+      Alert.alert('Você precisa Ativar o GPS');
+    } else {
+      Alert.alert('Não foi possivel acessar sua localização. Tente denovo ');
+    }
+  }
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       p => {
         dispatch({type: 'Latitude', payload: p.coords.latitude});
+        Alert.alert('Latitude carregada com Sucesso!');
       },
-      error => Alert.alert(error.message),
+      error => console.log(Call(error.code)),
       {enableHighAccuracy: false, timeout: 20000, maximumAge: 1000},
     );
   };
   async function Buscar() {
-    try {
-      const response = await axios.get(
-        `https://api.hgbrasil.com/weather?key=cc5354f2&city_name=${state.Cidade},${state.Estado.sigla}`,
-      );
-      const res = response.data;
-      const x = res.results.forecast[0].max;
+    if (state.Cidade && state.Estado != '') {
+      try {
+        const response = await axios.get(
+          `https://api.hgbrasil.com/weather?key=cc5354f2&city_name=${state.Cidade},${state.Estado.sigla}`,
+        );
+        const res = response.data;
+        const x = res.results.forecast[0].max;
 
-      dispatch({type: 'TemperaturaE', payload: x});
-    } catch (error) {
-      console.log(error);
+        dispatch({type: 'TemperaturaE', payload: x});
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      Alert.alert('Você precisa preencher os Campos Cidade/Estado');
     }
   }
   async function ListState() {
@@ -106,18 +125,24 @@ export default function ({navigation}) {
   }, [state.Estado.id]);
 
   return (
-    <View style={{padding: 10, justifyContent: 'center', alignItems: 'center'}}>
-      <Card style={{padding: 10, height: '70%', borderRadius: 10}}>
+    <View>
+      <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
+        <Appbar.Content title="iGlu" />
+        
+      </Appbar.Header>
+      <Card style={{padding: 20}}>
+        <Title>Nome do Projeto</Title>
         <TextInput
           label="Nome do Projeto"
           onChangeText={text => dispatch({type: 'Nome_Projeto', payload: text})}
         />
+        <Title>Localização Do Projeto</Title>
         <View style={{display: 'flex', flexDirection: 'row'}}>
           <Picker
             selectedValue={state.Estado}
             onValueChange={text => dispatch({type: 'Estado', payload: text})}
             style={{width: 180}}>
-            <Picker.Item label="Escolha uma Material..." value="" />
+            <Picker.Item label="Estado" value="" />
             {State.map(item => (
               <Picker.Item key={item} label={item.nome} value={item} />
             ))}
@@ -126,34 +151,56 @@ export default function ({navigation}) {
             selectedValue={state.Cidade}
             style={{width: 172}}
             onValueChange={text => dispatch({type: 'Cidade', payload: text})}>
-            <Picker.Item label="Escolha uma Material..." value="" />
+            <Picker.Item label="Cidade" value="" />
             {City.map(item => (
               <Picker.Item key={item} label={item} value={item} />
             ))}
           </Picker>
         </View>
-
-        <TextInput
-          keyboardType="numeric"
-          label="Temperatura Local do Dia"
-          value={`${state.TemperaturaE}`}
-          onChangeText={text => dispatch({type: 'TemperaturaE', payload: text})}
-        />
-        <Button
-          onPress={() => {
-            Buscar();
+        <Title>Temperatura do Dia</Title>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-          Buscar
-        </Button>
+          <TextInput
+            style={{width: 190}}
+            keyboardType="numeric"
+            label="Temperatura Local do Dia"
+            value={`${state.TemperaturaE}`}
+            onChangeText={text =>
+              dispatch({type: 'TemperaturaE', payload: text})
+            }
+          />
+          <IconButton
+            style={{marginRight: 30, backgroundColor: '#0ff'}}
+            icon="plus"
+            onPress={() => {
+              Buscar();
+            }}
+          />
+        </View>
+        <Title>Latitude</Title>
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            onChangeText={text => dispatch({type: 'Latitude', payload: text})}
+            label="Latitude"
+            keyboardType="numeric"
+            value={`${state.Latitude}`}
+            style={{width: 190}}
+          />
+          <IconButton
+            style={{backgroundColor: '#0ff'}}
+            icon="crosshairs-gps"
+            onPress={getLocation}>
+            Localização
+          </IconButton>
+        </View>
 
-        <IconButton icon="crosshairs-gps" onPress={getLocation}>
-          Localização
-        </IconButton>
         <Button
           onPress={() => {
             Send();
           }}>
-          Processar
+          Próximo
         </Button>
       </Card>
     </View>

@@ -12,7 +12,7 @@ import {
   Container_List_Equipament_Title,
   Card_List_Equipament,
 } from './style';
-import {TextInput, IconButton, Avatar} from 'react-native-paper';
+import {TextInput, IconButton, Avatar, Appbar, Title} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_equipamentos, listar_equipamentos} from '../../services/API';
 import {TesteContext} from '../../providers';
@@ -119,12 +119,13 @@ export default function ({navigation}) {
     <TouchableOpacity
       style={{
         height: 100,
-        backgroundColor: selected == item.id ? '#f0f' : '#fff',
+        backgroundColor: selected == item.id ? '#FF4F4F' : '#fff',
         elevation: 5,
         borderRadius: 10,
         marginVertica: 10,
         marginHorizontal: 20,
-        marginBottom: 10,
+        marginBottom: 20,
+        marginTop: 10,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
@@ -136,7 +137,7 @@ export default function ({navigation}) {
         size={64}
         icon="monitor"
         color="black"
-        style={{backgroundColor: '#fff'}}
+        style={{backgroundColor: selected == item.id ? '#FF4F4F' : '#fff'}}
       />
 
       <View
@@ -147,7 +148,7 @@ export default function ({navigation}) {
           flex: 1,
         }}>
         <Text style={{fontWeight: 'bold', fontSize: 16}}>{item.nome}</Text>
-        <Text style={{fontSize: 15}}>Potência:{item.potencia}</Text>
+        <Text style={{fontSize: 15}}>Potência: {item.potencia} watts</Text>
       </View>
       <View
         style={{
@@ -176,61 +177,80 @@ export default function ({navigation}) {
 
   return (
     <Container_Home>
-      <Card_Equipament>
-        <Title_Equipament>Equipamentos</Title_Equipament>
+      <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
+        <Appbar.Content title="Equipamento" />
+      </Appbar.Header>
 
-        <Text>Tipo do teto:</Text>
-        <Picker
-          selectedValue={state.equipamento}
-          onValueChange={text =>
-            dispatch({type: 'equipamento', payload: text})
-          }>
-          <Picker.Item label="Escolha um Equipamento..." value="" />
-          {equipament.map(item => (
-            <Picker.Item key={item} label={item.nome} value={item} />
-          ))}
-        </Picker>
+      <Card_Equipament>
+        <Title>Tipos de Equipamentos</Title>
+        <View
+          style={{
+            justifyContent: 'center',
+            borderRadius: 15,
+            borderWidth: 1,
+            overflow: 'hidden',
+            height: 50,
+            backgroundColor: '#FFF',
+          }}>
+          <Picker
+            selectedValue={state.equipamento}
+            onValueChange={text =>
+              dispatch({type: 'equipamento', payload: text})
+            }>
+            <Picker.Item label="Escolha um Equipamento..." value="" />
+            {equipament.map(item => (
+              <Picker.Item key={item} label={item.nome} value={item} />
+            ))}
+          </Picker>
+        </View>
 
         <Container_Input>
           <TextInput
-            style={{marginRight: 10}}
+            style={{
+              height: 50,
+              borderRadius: 1,
+              borderWidth: 1,
+              backgroundColor: '#FFF',
+              marginTop: 10,
+            }}
+            maxLength={3}
             placeholder="Quantidade"
             keyboardType="numeric"
             onChangeText={text => dispatch({type: 'quantidade', payload: text})}
           />
           <IconButton
             icon="plus"
-            color="red"
-            style={{backgroundColor: '#012'}}
+            color="white"
+            style={{backgroundColor: '#B0E0E6'}}
             onPress={() => {
               Add();
             }}
           />
         </Container_Input>
-        <Button_Send
-          onPress={() => {
-            Send();
-          }}>
-          Calcular
-        </Button_Send>
-        <Button_Remove
-          onPress={() => {
-            Remove();
-          }}>
-          Remover
-        </Button_Remove>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <IconButton
+            style={{backgroundColor: '#68E068'}}
+            color="white"
+            size={30}
+            icon="calculator"
+            onPress={() => {
+              Send();
+            }}></IconButton>
+        </View>
       </Card_Equipament>
 
       <Container_List_Equipament>
         <Card_List_Equipament>
-          <Container_List_Equipament_Title
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: 5,
-            }}>
-            <Text style={{fontSize: 28}}>Lista de Equipamentos:</Text>
-          </Container_List_Equipament_Title>
+          <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
+            <Appbar.Content title="Lista de Equipamento" />
+            <Appbar.Action
+            color="#FF4F4F"
+              icon="delete"
+              onPress={() => {
+                Remove();
+              }}
+            />
+          </Appbar.Header>
           <FlatList
             data={selectedList}
             renderItem={render}

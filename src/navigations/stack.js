@@ -13,7 +13,7 @@ import Info from '../screens/Info'
 const Stack = createNativeStackNavigator();
 export default () => {
   return (
-    <Stack.Navigator initialRouteName="Info" screenOptions={{headerShown:false}}>
+    <Stack.Navigator initialRouteName="equipamento" screenOptions={{headerShown:false}}>
       <Stack.Screen name="Info" component={Info}/>
       <Stack.Screen name="main" component={Principal}/>
       <Stack.Screen name="parede" component={Parede}/>

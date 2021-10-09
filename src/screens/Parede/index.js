@@ -92,6 +92,7 @@ export default function ({navigation}) {
         const rest = resposta.data;
 
         let total = parseFloat(rest.resultado) + parede.valorT;
+        console.log(rest);
         setParede({Contador: contador + 1, valorT: total.toFixed(2)});
 
         navigation.navigate('main');
@@ -114,6 +115,7 @@ export default function ({navigation}) {
           <Title_Parede>Parede</Title_Parede>
 
           <TextInput
+          style={{height:50}}
             label="Área da Parede:"
             placeholder="M²"
             keyboardType="numeric"
@@ -249,7 +251,7 @@ export default function ({navigation}) {
           <Button
             onPress={() => {
               console.log(state.Latitude);
-              console.log(state.TemperaturaExterna)
+              console.log(state.TemperaturaExterna);
             }}>
             Teste
           </Button>
