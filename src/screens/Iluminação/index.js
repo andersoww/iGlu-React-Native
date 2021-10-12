@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {useReducer, useContext} from 'react';
 import {View, ScrollView, Alert} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, IconButton, Appbar } from 'react-native-paper';
 import {calculo_iluminacao} from '../../services/API';
 import { TesteContext } from '../../providers';
 
@@ -43,27 +43,36 @@ export default function ({navigation}) {
 
   return (
 
-    <Container>
+    <>
+      <Appbar.Header style={{ backgroundColor: '#B0E0E6' }}>
+        <Appbar.Content title="Iluminação" />
+      </Appbar.Header>
+      <Container>
       <Card_Iluminacao>
         <ScrollView>
           <View>
-            <Title_Iluminacao>Iluminação</Title_Iluminacao>
 
             <TextInput
               placeholder="Area do comodo (m²)"
               keyboardType="numeric"
-              onChangeText={text => dispatch({type: 'area', payload: text})}
+              onChangeText={text => dispatch({ type: 'area', payload: text })}
             />
           </View>
 
-          <Button
-            onPress={() => {
-              Enviar();
-            }}>
-            Calcular
-          </Button>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <IconButton
+              style={{ backgroundColor: '#68E068' }}
+              color="white"
+              size={30}
+              icon="calculator"
+              onPress={() => {
+                Enviar();
+              }}
+            ></IconButton>
+          </View>
         </ScrollView>
-      </Card_Iluminacao>
-    </Container>
+        </Card_Iluminacao>
+      </Container>
+    </>
   );
 }

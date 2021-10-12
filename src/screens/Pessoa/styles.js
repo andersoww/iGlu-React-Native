@@ -8,6 +8,7 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Card_Pessoas = styled(Card)`
+  margin-top: 10px;
   padding: 10px;
   border-radius: 10px;
 `;

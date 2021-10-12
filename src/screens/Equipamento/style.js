@@ -4,11 +4,12 @@ import styled from 'styled-components/native';
 
 export const Container_Home = styled.SafeAreaView`
   flex: 1;
- background-color: #FDFFFF;
+  padding: 10px;
 `;
 export const Card_Equipament = styled(Card)`
   margin-top: 10px;
   padding: 10px;
+  border-radius: 10px;
 `;
 export const Title_Equipament = styled(Title)`
   font-size: 24px;
@@ -30,4 +31,6 @@ export const Container_List_Equipament_Title = styled.View`
   justify-content: center;
   margin-bottom: 5px;
 `;
-export const Card_List_Equipament = styled(Card)``;
+export const Card_List_Equipament = styled(Card)`
+margin-top: 10px;
+`;

@@ -30,12 +30,12 @@ export default function () {
 
   return (
     <>
-      <ScrollView style={{height: '80%'}}>
-        <View>
           <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
             <Appbar.Content title="iGlu" />
             <Appbar.Action icon="content-save" />
           </Appbar.Header>
+      <ScrollView style={{height: '80%'}}>
+        <View>
           <Card style={{marginBottom: 5}}>
             <Card.Title
               title="Iluminação"

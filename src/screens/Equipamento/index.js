@@ -176,11 +176,12 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <Container_Home>
+    <>
       <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="Equipamento" />
       </Appbar.Header>
 
+    <Container_Home>
       <Card_Equipament>
         <Title>Tipos de Equipamentos</Title>
         <View
@@ -260,5 +261,6 @@ export default function ({navigation}) {
         </Card_List_Equipament>
       </Container_List_Equipament>
     </Container_Home>
+    </>
   );
 }

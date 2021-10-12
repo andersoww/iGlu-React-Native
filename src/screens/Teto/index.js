@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, IconButton, Appbar} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {listar_forro, calcular_teto, listar_telha} from '../../services/API';
 import { TesteContext } from '../../providers';
@@ -78,10 +78,13 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <Container>
+    <>
+      <Appbar.Header style={{ backgroundColor: '#B0E0E6' }}>
+        <Appbar.Content title="Teto" />
+      </Appbar.Header>
+      <Container>
       <Card_Teto>
         <ScrollView>
-          <Title_Teto>Teto</Title_Teto>
 
           <TextInput
             label="Área do comodo (m²):"
@@ -91,6 +94,18 @@ export default function ({navigation}) {
           />
           <View>
             <Text>Tipo do teto:</Text>
+
+            <View style={{
+              justifyContent: 'center',
+              borderRadius: 15,
+              borderWidth: 1,
+              overflow: 'hidden',
+              height: 50,
+              backgroundColor: '#FFF',
+              marginBottom: 20,
+              marginTop: 10
+            }}
+            >
 
             <Picker
               selectedValue={state.Telha_id}
@@ -106,6 +121,18 @@ export default function ({navigation}) {
                 />
               ))}
             </Picker>
+            </View>
+
+            <View style={{
+              justifyContent: 'center',
+              borderRadius: 15,
+              borderWidth: 1,
+              overflow: 'hidden',
+              height: 50,
+              backgroundColor: '#FFF',
+              marginBottom: 20,
+            }}
+            >
 
             <Picker
               selectedValue={state.ForroLaje_id}
@@ -121,6 +148,8 @@ export default function ({navigation}) {
                 />
               ))}
             </Picker>
+            </View>
+
           </View>
 
           <View>
@@ -132,6 +161,7 @@ export default function ({navigation}) {
               onChangeText={text =>
                 dispatch({type: 'TemperaturaInterna', payload: text})
               }
+              style={{marginBottom: 10}}
             />
             <TextInput
               placeholder="Temperatura Externa"
@@ -141,14 +171,20 @@ export default function ({navigation}) {
               }
             />
           </View>
-          <Button
-            onPress={() => {
-              Enviar();
-            }}>
-            Clicar
-          </Button>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <IconButton
+              style={{ backgroundColor: '#68E068' }}
+              color="white"
+              size={30}
+              icon="calculator"
+              onPress={() => {
+                Enviar();
+              }}
+            ></IconButton>
+          </View>
         </ScrollView>
-      </Card_Teto>
-    </Container>
+        </Card_Teto>
+      </Container>
+    </>
   );
 }

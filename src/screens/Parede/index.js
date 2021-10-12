@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import {Card, TextInput, Button, Switch, Divider} from 'react-native-paper';
+import { Card, TextInput, IconButton, Switch, Appbar} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {Api_bloco, calcular_parede} from '../../services/API';
 import {TesteContext} from '../../providers';
@@ -67,7 +67,7 @@ export default function ({navigation}) {
   });
 
   const [dados1, setDados1] = useState([]);
-  const [isSwitchOn, setIsSwitchOn] = useState(true);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
 
   const Dados = {
     ...state,
@@ -109,10 +109,13 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <Container>
+    <>
+      <Appbar.Header style={{ backgroundColor: '#B0E0E6' }}>
+        <Appbar.Content title="Paredes" />
+      </Appbar.Header>
+      <Container>
       <ScrollView>
         <Card_Parede>
-          <Title_Parede>Parede</Title_Parede>
 
           <TextInput
           style={{height:50}}
@@ -124,6 +127,17 @@ export default function ({navigation}) {
           <View>
             <Text>Material da Parede:</Text>
 
+              <View style={{
+              justifyContent: 'center',
+              borderRadius: 15,
+              borderWidth: 1,
+              overflow: 'hidden',
+              height: 50,
+              backgroundColor: '#FFF',
+              marginBottom: 20,
+              marginTop: 10
+            }}
+            >
             <Picker
               selectedValue={state.Bloco_id}
               onValueChange={text =>
@@ -140,6 +154,8 @@ export default function ({navigation}) {
                 />
               ))}
             </Picker>
+              </View>
+
           </View>
         </Card_Parede>
 
@@ -178,6 +194,17 @@ export default function ({navigation}) {
               }
             />
 
+              <View style={{
+              justifyContent: 'center',
+              borderRadius: 15,
+              borderWidth: 1,
+              overflow: 'hidden',
+              height: 50,
+              backgroundColor: '#FFF',
+              marginBottom: 20,
+              marginTop: 10
+            }}
+            >
             <Picker
               selectedValue={state.Orientacao}
               onValueChange={text =>
@@ -196,6 +223,8 @@ export default function ({navigation}) {
               <Picker.Item label="Oeste" value="O" />
               <Picker.Item label="Sudoeste" value="SO" />
             </Picker>
+              </View>
+
           </Card_Parede>
         )}
         <Card_Parede>
@@ -242,21 +271,20 @@ export default function ({navigation}) {
               }
             />
           </View>
-          <Button
-            onPress={() => {
-              Enviar();
-            }}>
-            Clicar
-          </Button>
-          <Button
-            onPress={() => {
-              console.log(state.Latitude);
-              console.log(state.TemperaturaExterna);
-            }}>
-            Teste
-          </Button>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <IconButton
+                style={{ backgroundColor: '#68E068' }}
+                color="white"
+                size={30}
+                icon="calculator"
+                onPress={() => {
+                  Enviar();
+                }}
+              ></IconButton>
+            </View>
         </Card_Parede>
-      </ScrollView>
-    </Container>
+        </ScrollView>
+      </Container>
+    </>
   );
 }

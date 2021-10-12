@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, IconButton, Appbar} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {calcular_pessoas} from '../../services/API';
 import {TesteContext} from '../../providers';
@@ -46,13 +46,26 @@ export default function ({navigation}) {
   }
 
   return (
-    <Container>
+    <>
+      <Appbar.Header style={{ backgroundColor: '#B0E0E6' }}>
+        <Appbar.Content title="Pessoas" />
+      </Appbar.Header>
+      <Container>
       <Card_Pessoas>
         <ScrollView>
           <View>
-            <Title_Pessoas>Pessoas</Title_Pessoas>
-
             <Text>Tipo de Atividede</Text>
+            <View style={{
+              justifyContent: 'center',
+              borderRadius: 15,
+              borderWidth: 1,
+              overflow: 'hidden',
+              height: 50,
+              backgroundColor: '#FFF',
+              marginBottom: 20,
+              marginTop: 10
+            }}
+            >
             <Picker
               selectedValue={state.atividade}
               onValueChange={text =>
@@ -63,6 +76,8 @@ export default function ({navigation}) {
               <Picker.Item label="Média" value="150" />
               <Picker.Item label="Alta" value="500" />
             </Picker>
+            </View>
+
 
             <TextInput
               placeholder="Quantidade"
@@ -73,14 +88,20 @@ export default function ({navigation}) {
             />
           </View>
 
-          <Button
-            onPress={() => {
-              Enviar();
-            }}>
-            Calcular
-          </Button>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <IconButton
+              style={{ backgroundColor: '#68E068' }}
+              color="white"
+              size={30}
+              icon="calculator"
+              onPress={() => {
+                Enviar();
+              }}
+            ></IconButton>
+          </View>
         </ScrollView>
       </Card_Pessoas>
-    </Container>
+      </Container>
+    </>
   );
 }
