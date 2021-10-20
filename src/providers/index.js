@@ -14,6 +14,7 @@ export const Provider = ({children}) => {
   const [iluminacao, setIluminacao] = useState({valorT: 0});
   const [pessoa, setPessoa] = useState({valorT: 0});
   const [infoInitial, setInfoInitial] = useState({});
+  const [refresh, setRefresh] = useState(false);
 
   return (
     <TesteContext.Provider
@@ -30,6 +31,8 @@ export const Provider = ({children}) => {
         setPessoa,
         infoInitial,
         setInfoInitial,
+        refresh,
+        setRefresh,
       }}>
       {children}
     </TesteContext.Provider>

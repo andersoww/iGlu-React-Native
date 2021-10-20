@@ -12,6 +12,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Geolocation from '@react-native-community/geolocation';
 import {TesteContext} from '../../providers';
+import UUIDGenerator from 'react-native-uuid-generator';
 
 export default function ({navigation}) {
   const {setInfoInitial} = useContext(TesteContext);
@@ -29,6 +30,8 @@ export default function ({navigation}) {
         return {...state, TemperaturaE: action.payload};
       case 'Latitude':
         return {...state, Latitude: action.payload};
+      case 'uuid':
+        return {...state, uuid: action.payload};
     }
   };
   const [City, setCity] = useState([]);
@@ -40,7 +43,13 @@ export default function ({navigation}) {
     Estado: '',
     TemperaturaE: '',
     Latitude: '',
+    uuid: '',
   });
+  function Generate() {
+    UUIDGenerator.getRandomUUID(uuid => {
+      dispatch({type: 'uuid', payload: uuid});
+    });
+  }
   function Call(p) {
     if (p == 1) {
       Alert.alert('Você precisa permitir que o aplicativo acesse o gps');
@@ -123,12 +132,14 @@ export default function ({navigation}) {
   useEffect(() => {
     ListCity();
   }, [state.Estado.id]);
+  useEffect(() => {
+    Generate();
+  }, []);
 
   return (
     <View>
       <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="iGlu" />
-        
       </Appbar.Header>
       <Card style={{padding: 20}}>
         <Title>Nome do Projeto</Title>

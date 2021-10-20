@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useReducer, useContext} from 'react';
 import {View, Text, ScrollView, Alert} from 'react-native';
-import { TextInput, IconButton, Appbar} from 'react-native-paper';
+import {TextInput, IconButton, Appbar} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {listar_forro, calcular_teto, listar_telha} from '../../services/API';
-import { TesteContext } from '../../providers';
+import {TesteContext} from '../../providers';
 
-import { Card_Teto, Container, Title_Teto} from './styles';
+import {Card_Teto, Container, Title_Teto} from './styles';
 
 export default function ({navigation}) {
-  const {teto, setTeto} = useContext(TesteContext);
+  const {teto, setTeto, infoInitial} = useContext(TesteContext);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -31,7 +31,7 @@ export default function ({navigation}) {
     Telha_id: '',
     ForroLaje_id: '',
     TemperaturaInterna: '',
-    TemperaturaExterna: '',
+    TemperaturaExterna: infoInitial.TemperaturaE,
   });
 
   const [telhas, setTelhas] = useState([]);
@@ -79,110 +79,98 @@ export default function ({navigation}) {
 
   return (
     <>
-      <Appbar.Header style={{ backgroundColor: '#B0E0E6' }}>
+      <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="Teto" />
       </Appbar.Header>
       <Container>
-      <Card_Teto>
-        <ScrollView>
+        <Card_Teto>
+          <ScrollView>
+            <TextInput
+              label="Área do comodo (m²):"
+              placeholder="M²"
+              keyboardType="numeric"
+              onChangeText={text => dispatch({type: 'AreaPiso', payload: text})}
+            />
+            <View>
+              <Text>Tipo do teto:</Text>
 
-          <TextInput
-            label="Área do comodo (m²):"
-            placeholder="M²"
-            keyboardType="numeric"
-            onChangeText={text => dispatch({type: 'AreaPiso', payload: text})}
-          />
-          <View>
-            <Text>Tipo do teto:</Text>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  borderRadius: 15,
+                  borderWidth: 1,
+                  overflow: 'hidden',
+                  height: 50,
+                  backgroundColor: '#FFF',
+                  marginBottom: 20,
+                  marginTop: 10,
+                }}>
+                <Picker
+                  selectedValue={state.Telha_id}
+                  onValueChange={text =>
+                    dispatch({type: 'Telha_id', payload: text})
+                  }>
+                  <Picker.Item label="Escolha uma Telha..." value="" />
+                  {telhas.map(item => (
+                    <Picker.Item
+                      key={item}
+                      label={`Telha ${item.material.nome} - ${item.espessura}`}
+                      value={item.id}
+                    />
+                  ))}
+                </Picker>
+              </View>
 
-            <View style={{
-              justifyContent: 'center',
-              borderRadius: 15,
-              borderWidth: 1,
-              overflow: 'hidden',
-              height: 50,
-              backgroundColor: '#FFF',
-              marginBottom: 20,
-              marginTop: 10
-            }}
-            >
-
-            <Picker
-              selectedValue={state.Telha_id}
-              onValueChange={text =>
-                dispatch({type: 'Telha_id', payload: text})
-              }>
-              <Picker.Item label="Escolha uma Telha..." value="" />
-              {telhas.map(item => (
-                <Picker.Item
-                  key={item}
-                  label={`Telha ${item.material.nome} - ${item.espessura}`}
-                  value={item.id}
-                />
-              ))}
-            </Picker>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  borderRadius: 15,
+                  borderWidth: 1,
+                  overflow: 'hidden',
+                  height: 50,
+                  backgroundColor: '#FFF',
+                  marginBottom: 20,
+                }}>
+                <Picker
+                  selectedValue={state.ForroLaje_id}
+                  onValueChange={text =>
+                    dispatch({type: 'ForroLaje_id', payload: text})
+                  }>
+                  <Picker.Item label="Escolha um Forro ou Laje..." value="" />
+                  {forro.map(item => (
+                    <Picker.Item
+                      key={item}
+                      label={`${item.material.nome} - ${item.espessura}`}
+                      value={item.id}
+                    />
+                  ))}
+                </Picker>
+              </View>
             </View>
 
-            <View style={{
-              justifyContent: 'center',
-              borderRadius: 15,
-              borderWidth: 1,
-              overflow: 'hidden',
-              height: 50,
-              backgroundColor: '#FFF',
-              marginBottom: 20,
-            }}
-            >
+            <View>
+              <Text>Temperatura:</Text>
 
-            <Picker
-              selectedValue={state.ForroLaje_id}
-              onValueChange={text =>
-                dispatch({type: 'ForroLaje_id', payload: text})
-              }>
-              <Picker.Item label="Escolha um Forro ou Laje..." value="" />
-              {forro.map(item => (
-                <Picker.Item
-                  key={item}
-                  label={`${item.material.nome} - ${item.espessura}`}
-                  value={item.id}
-                />
-              ))}
-            </Picker>
+              <TextInput
+                placeholder="Temperatura Interna"
+                keyboardType="numeric"
+                onChangeText={text =>
+                  dispatch({type: 'TemperaturaInterna', payload: text})
+                }
+                style={{marginBottom: 10}}
+              />
             </View>
-
-          </View>
-
-          <View>
-            <Text>Temperatura:</Text>
-
-            <TextInput
-              placeholder="Temperatura Interna"
-              keyboardType="numeric"
-              onChangeText={text =>
-                dispatch({type: 'TemperaturaInterna', payload: text})
-              }
-              style={{marginBottom: 10}}
-            />
-            <TextInput
-              placeholder="Temperatura Externa"
-              keyboardType="numeric"
-              onChangeText={text =>
-                dispatch({type: 'TemperaturaExterna', payload: text})
-              }
-            />
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton
-              style={{ backgroundColor: '#68E068' }}
-              color="white"
-              size={30}
-              icon="calculator"
-              onPress={() => {
-                Enviar();
-              }}
-            ></IconButton>
-          </View>
-        </ScrollView>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <IconButton
+                style={{backgroundColor: '#68E068'}}
+                color="white"
+                size={30}
+                icon="calculator"
+                onPress={() => {
+                  Enviar();
+                }}></IconButton>
+            </View>
+          </ScrollView>
         </Card_Teto>
       </Container>
     </>

@@ -9,11 +9,12 @@ import Equipamento from '../screens/Equipamento';
 import Iluminacao from '../screens/Iluminação';
 import Pessoa from '../screens/Pessoa';
 import Info from '../screens/Info'
+import ProjetoSave from '../screens/Projetos'
 
 const Stack = createNativeStackNavigator();
 export default () => {
   return (
-    <Stack.Navigator initialRouteName="Info" screenOptions={{headerShown:false}}>
+    <Stack.Navigator initialRouteName="projetos" screenOptions={{headerShown:false}}>
       <Stack.Screen name="Info" component={Info}/>
       <Stack.Screen name="main" component={Principal}/>
       <Stack.Screen name="parede" component={Parede}/>
@@ -21,6 +22,7 @@ export default () => {
       <Stack.Screen name="equipamento" component={Equipamento}/>
       <Stack.Screen name="iluminacao" component={Iluminacao}/>
       <Stack.Screen name="pessoa" component={Pessoa}/>
+      <Stack.Screen name="projetos" component={ProjetoSave}/>
     </Stack.Navigator>
   );
 };
