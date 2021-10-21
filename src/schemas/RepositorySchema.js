@@ -5,7 +5,8 @@ export default class RepositorySchema {
     properties: {
       id:'string',
       nome:'string',
-      cargaTotal:'int',
+      btu:'int',
+      tr:'int'
 
 
       

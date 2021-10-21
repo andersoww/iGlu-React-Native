@@ -8,6 +8,10 @@ import {
   IconButton,
   Appbar,
   Title,
+  Portal,
+  Dialog,
+  Paragraph,
+  Provider,
 } from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import Geolocation from '@react-native-community/geolocation';
@@ -36,6 +40,10 @@ export default function ({navigation}) {
   };
   const [City, setCity] = useState([]);
   const [State, setState] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
 
   const [state, dispatch] = useReducer(reducer, {
     Projeto: '',
@@ -126,6 +134,7 @@ export default function ({navigation}) {
       Alert.alert('Informe todos os campos');
     }
   }
+
   useEffect(() => {
     ListState();
   }, []);
@@ -137,83 +146,114 @@ export default function ({navigation}) {
   }, []);
 
   return (
-    <View>
+    <>
       <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="iGlu" />
+        <Appbar.Action icon="alert" onPress={() => {}} />
       </Appbar.Header>
-      <Card style={{padding: 20}}>
-        <Title>Nome do Projeto</Title>
-        <TextInput
-          label="Nome do Projeto"
-          onChangeText={text => dispatch({type: 'Nome_Projeto', payload: text})}
-        />
-        <Title>Localização Do Projeto</Title>
-        <View style={{display: 'flex', flexDirection: 'row'}}>
-          <Picker
-            selectedValue={state.Estado}
-            onValueChange={text => dispatch({type: 'Estado', payload: text})}
-            style={{width: 180}}>
-            <Picker.Item label="Estado" value="" />
-            {State.map(item => (
-              <Picker.Item key={item} label={item.nome} value={item} />
-            ))}
-          </Picker>
-          <Picker
-            selectedValue={state.Cidade}
-            style={{width: 172}}
-            onValueChange={text => dispatch({type: 'Cidade', payload: text})}>
-            <Picker.Item label="Cidade" value="" />
-            {City.map(item => (
-              <Picker.Item key={item} label={item} value={item} />
-            ))}
-          </Picker>
-        </View>
-        <Title>Temperatura do Dia</Title>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
+      <View style={{flex: 1, padding: 10}}>
+        <Card style={{padding: 10, borderRadius: 10, marginBottom: 10}}>
+          <Title>Nome do Projeto</Title>
           <TextInput
-            style={{width: 190}}
-            keyboardType="numeric"
-            label="Temperatura Local do Dia"
-            value={`${state.TemperaturaE}`}
+            label="Nome do Projeto"
             onChangeText={text =>
-              dispatch({type: 'TemperaturaE', payload: text})
+              dispatch({type: 'Nome_Projeto', payload: text})
             }
           />
-          <IconButton
-            style={{marginRight: 30, backgroundColor: '#0ff'}}
-            icon="plus"
-            onPress={() => {
-              Buscar();
-            }}
-          />
-        </View>
-        <Title>Latitude</Title>
-        <View style={{flexDirection: 'row'}}>
-          <TextInput
-            onChangeText={text => dispatch({type: 'Latitude', payload: text})}
-            label="Latitude"
-            keyboardType="numeric"
-            value={`${state.Latitude}`}
-            style={{width: 190}}
-          />
-          <IconButton
-            style={{backgroundColor: '#0ff'}}
-            icon="crosshairs-gps"
-            onPress={getLocation}>
-            Localização
-          </IconButton>
-        </View>
-
-        <Button
-          onPress={() => {
-            Send();
-          }}>
-          Próximo
-        </Button>
-      </Card>
-    </View>
+          <Title>Localização Do Projeto</Title>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View
+              style={{
+                justifyContent: 'center',
+                borderRadius: 15,
+                borderWidth: 1,
+                overflow: 'hidden',
+                height: 50,
+                backgroundColor: '#FFF',
+                marginRight: 3,
+              }}>
+              <Picker
+                selectedValue={state.Estado}
+                onValueChange={text =>
+                  dispatch({type: 'Estado', payload: text})
+                }
+                style={{width: 180}}>
+                <Picker.Item label="Estado" value="" />
+                {State.map(item => (
+                  <Picker.Item key={item} label={item.nome} value={item} />
+                ))}
+              </Picker>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                borderRadius: 15,
+                borderWidth: 1,
+                overflow: 'hidden',
+                height: 50,
+                backgroundColor: '#FFF',
+              }}>
+              <Picker
+                selectedValue={state.Cidade}
+                style={{width: 172}}
+                onValueChange={text =>
+                  dispatch({type: 'Cidade', payload: text})
+                }>
+                <Picker.Item label="Cidade" value="" />
+                {City.map(item => (
+                  <Picker.Item key={item} label={item} value={item} />
+                ))}
+              </Picker>
+            </View>
+          </View>
+          <Title>Temperatura Externa do Projeto</Title>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <TextInput
+              style={{width: 190}}
+              keyboardType="numeric"
+              label="Temperatura Local do Dia"
+              value={`${state.TemperaturaE}`}
+              onChangeText={text =>
+                dispatch({type: 'TemperaturaE', payload: text})
+              }
+            />
+            <IconButton
+              style={{marginRight: 30, backgroundColor: '#B0E0E6'}}
+              icon="plus"
+              onPress={() => {
+                Buscar();
+              }}
+            />
+          </View>
+          <Title>Latitude</Title>
+          <View style={{flexDirection: 'row'}}>
+            <TextInput
+              onChangeText={text => dispatch({type: 'Latitude', payload: text})}
+              label="Latitude"
+              keyboardType="numeric"
+              value={`${state.Latitude}`}
+              style={{width: 190}}
+            />
+            <IconButton
+              style={{backgroundColor: '#B0E0E6'}}
+              icon="crosshairs-gps"
+              onPress={getLocation}></IconButton>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <IconButton
+              style={{backgroundColor: '#68E068', marginTop: 10}}
+              icon="chevron-right"
+              size={30}
+              onPress={() => {
+                Send();
+              }}
+            />
+          </View>
+        </Card>
+      </View>
+    </>
   );
 }

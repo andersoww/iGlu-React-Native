@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Keyboard} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import getRealm from '../../services/realm';
@@ -11,12 +11,13 @@ import {TesteContext} from '../../providers';
 
 export default function ({navigation}) {
   const [project, setProject] = useState([]);
-  const {refresh} = useContext(TesteContext);
+  const {refresh, setRefresh} = useContext(TesteContext);
   async function Remove() {
     const realm = await getRealm();
     realm.write(() => {
       realm.deleteAll();
     });
+    setRefresh(!refresh);
   }
   useEffect(() => {
     async function loadRepositories() {
@@ -45,7 +46,19 @@ export default function ({navigation}) {
           style={{backgroundColor: '#B0E0E6'}}
           size={40}
           onPress={() => {
-            Remove();
+            Alert.alert('Confirmação', 'Apagar todos os projetos ?', [
+              {
+                text: 'Cancelar',
+                onPress: () => {},
+                style: 'cancel',
+              },
+              {
+                text: 'Sim',
+                onPress: () => {
+                  Remove();
+                },
+              },
+            ]);
           }}
         />
         <IconButton
@@ -64,7 +77,7 @@ export default function ({navigation}) {
         refresh={refresh}
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
-          <Repository onPress={() => console.log(item.id)} data={item} />
+          <Repository onPress={() => console.log(item.nome)} data={item} />
         )}
       />
     </Container>

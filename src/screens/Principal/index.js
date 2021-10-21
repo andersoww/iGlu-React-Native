@@ -7,51 +7,6 @@ import {TesteContext} from '../../providers';
 import getRealm from '../../services/realm';
 
 export default function ({navigation}) {
-  async function saveRepository(repository) {
-    const data = {
-      id: repository.uuid,
-      nome: repository.nome,
-      cargaTotal: repository.cargaTotal,
-    };
-    const realm = await getRealm();
-    realm.write(() => {
-      realm.create('Repository', data);
-    });
-  }
-  async function HandleAddRepository() {
-    if (
-      Iluminacao != 0 &&
-      Parede != 0 &&
-      Equipamento != 0 &&
-      Teto != 0 &&
-      Pessoas != 0
-    ) {
-      try {
-        const x = {
-          uuid: infoInitial.uuid,
-          nome: infoInitial.Projeto,
-          cargaTotal: resultado,
-        };
-        const response = x;
-        await saveRepository(response);
-        setRefresh(!refresh);
-        setTeto({valorT: 0});
-        setEquipamento({valorT: 0});
-        setIluminacao({valorT: 0});
-        setPessoa({valorT: 0});
-        setParede({Contador: 1, valorT: 0});
-        navegar.navigate('projetos');
-      } catch (error) {
-        console.log(error);
-      }
-
-      return;
-    } else {
-      Alert.alert(
-        'Você precisa realizar todos os Calculos para salvar o Projeto',
-      );
-    }
-  }
   const {
     teto,
     equipamento,
@@ -73,15 +28,62 @@ export default function ({navigation}) {
   const Equipamento = equipamento.valorT.toFixed(2);
   const Teto = teto.valorT.toFixed(2);
   const Pessoas = pessoa.valorT.toFixed(2);
-  const resultado =
+  const Btu =
     (pessoa.valorT +
       equipamento.valorT +
       iluminacao.valorT +
       teto.valorT +
       parede.valorT) *
     3.86;
-
+  const Tr = Btu / 12000;
   const navegar = useNavigation();
+  async function saveRepository(repository) {
+    const data = {
+      id: repository.uuid,
+      nome: repository.nome,
+      btu: repository.btu,
+      tr: repository.tr,
+    };
+    const realm = await getRealm();
+    realm.write(() => {
+      realm.create('Repository', data);
+    });
+  }
+  async function HandleAddRepository() {
+    if (
+      Iluminacao != 0 &&
+      Parede != 0 &&
+      Equipamento != 0 &&
+      Teto != 0 &&
+      Pessoas != 0
+    ) {
+      try {
+        const x = {
+          uuid: infoInitial.uuid,
+          nome: infoInitial.Projeto,
+          btu: Btu,
+          tr: Tr,
+        };
+
+        await saveRepository(x);
+        setRefresh(!refresh);
+        setTeto({valorT: 0});
+        setEquipamento({valorT: 0});
+        setIluminacao({valorT: 0});
+        setPessoa({valorT: 0});
+        setParede({Contador: 1, valorT: 0});
+        navegar.navigate('projetos');
+      } catch (error) {
+        console.log(error);
+      }
+
+      return;
+    } else {
+      Alert.alert(
+        'Você precisa realizar todos os Calculos para salvar o Projeto',
+      );
+    }
+  }
 
   return (
     <>
@@ -93,7 +95,9 @@ export default function ({navigation}) {
             Alert.alert('Confirmação', 'Salvar projeto ?', [
               {
                 text: 'Cancelar',
-                onPress: () => {},
+                onPress: () => {
+                  console.log(Btu);
+                },
                 style: 'cancel',
               },
               {
@@ -107,6 +111,22 @@ export default function ({navigation}) {
         />
       </Appbar.Header>
       <ScrollView style={{height: '80%'}}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Title>Carga Térmica Atual:</Title>
+        </View>
+        <Card
+          style={{
+            padding: 10,
+            margin: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Card.Content>
+            <Title>{Btu.toFixed(2)} Btu/h</Title>
+            <Title>{Tr.toFixed(2)} TR</Title>
+          </Card.Content>
+        </Card>
+
         <View>
           <Card style={{marginBottom: 5}}>
             <Card.Title
@@ -114,7 +134,7 @@ export default function ({navigation}) {
               subtitle="Carga resultante da iluminação do ambiente"
             />
             <Card.Content style={{alignItems: 'center'}}>
-              <Title>{Iluminacao}</Title>
+              <Title>{Iluminacao} kcal/h</Title>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -132,7 +152,7 @@ export default function ({navigation}) {
               subtitle="Carga resultante da condução das Paredes"
             />
             <Card.Content style={{alignItems: 'center'}}>
-              <Title>{Parede}</Title>
+              <Title>{Parede} kcal/h</Title>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -150,7 +170,7 @@ export default function ({navigation}) {
               subtitle="Carga resultante da condução do Teto"
             />
             <Card.Content style={{alignItems: 'center'}}>
-              <Title>{Teto}</Title>
+              <Title>{Teto} kcal/h</Title>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -168,7 +188,7 @@ export default function ({navigation}) {
               subtitle="Carga resultante dos equipamentos"
             />
             <Card.Content style={{alignItems: 'center'}}>
-              <Title>{Equipamento}</Title>
+              <Title>{Equipamento} kcal/h</Title>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -186,7 +206,7 @@ export default function ({navigation}) {
               subtitle="Carga resultante das pessoas"
             />
             <Card.Content style={{alignItems: 'center'}}>
-              <Title>{Pessoas}</Title>
+              <Title>{Pessoas} kcal/h</Title>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -198,18 +218,6 @@ export default function ({navigation}) {
             </Card.Actions>
           </Card>
         </View>
-        <Button
-          onPress={() => {
-            Alert.alert(`Resultado é ${resultado.toFixed(2)}`);
-          }}>
-          Converter BTU
-        </Button>
-        <Button
-          onPress={() => {
-            console.log(typeof Iluminacao);
-          }}>
-          Teste
-        </Button>
       </ScrollView>
 
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
