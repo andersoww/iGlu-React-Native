@@ -46,7 +46,7 @@ export default function ({navigation}) {
     Cidade: '',
     Estado: '',
     TemperaturaE: '',
-    TemperaturaI: '',
+    TemperaturaI: 24,
     Latitude: '',
     uuid: '',
   });
@@ -117,7 +117,12 @@ export default function ({navigation}) {
     }
   }
   function Send() {
-    if (
+    if (state.TemperaturaE <= state.TemperaturaI) {
+      Alert.alert(
+        'Temperatura Externa está Incorreta',
+        'Temperatura Externa precisa ser maior Temperatura Interna',
+      );
+    } else if (
       state.Projeto != '' &&
       state.Cidade != '' &&
       state.Estado != '' &&
@@ -208,10 +213,11 @@ export default function ({navigation}) {
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
-              marginLeft:5
+              marginLeft: 5,
             }}>
             <TextInput
               style={{width: 130, marginRight: 20}}
+              maxLength={2}
               keyboardType="numeric"
               label="Interna"
               value={`${state.TemperaturaI}`}
@@ -222,6 +228,7 @@ export default function ({navigation}) {
 
             <TextInput
               style={{width: 130}}
+              maxLength={2}
               keyboardType="numeric"
               label="Externa"
               value={`${state.TemperaturaE}`}
@@ -239,13 +246,14 @@ export default function ({navigation}) {
           </View>
 
           <Title>Latitude</Title>
-          <View style={{flexDirection: 'row',marginLeft:5}}>
+          <View style={{flexDirection: 'row', marginLeft: 5}}>
             <TextInput
               onChangeText={text => dispatch({type: 'Latitude', payload: text})}
               label="Latitude"
               keyboardType="numeric"
               value={`${state.Latitude}`}
               style={{width: 130}}
+              maxLength={6}
             />
             <IconButton
               style={{backgroundColor: '#B0E0E6'}}

@@ -96,7 +96,7 @@ export default function ({navigation}) {
         setParede({Contador: contador + 1, valorT: total});
 
         navigation.navigate('main');
-        Alert.alert(`Parede ${contador} calculada com sucesso`);
+        Alert.alert(`Parede ${contador + 1} calculada com sucesso`);
       } catch (error) {
         Alert.alert('Você precisa informar todos os campos');
         console.log(error);
@@ -113,6 +113,7 @@ export default function ({navigation}) {
     <>
       <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="Paredes" />
+        <Appbar.Content title={`Faltam ${4 - parede.Contador}`} />
       </Appbar.Header>
       <Container>
         <ScrollView>
@@ -230,20 +231,59 @@ export default function ({navigation}) {
           <Card_Parede>
             <View>
               <Text>Reboco:</Text>
-              <TextInput
+              {/* <TextInput
                 placeholder="Condutividade do Reboco "
                 keyboardType="numeric"
                 onChangeText={text =>
                   dispatch({type: 'CondutividadeReboco', payload: text})
                 }
-              />
-              <TextInput
-                placeholder="Condutividade do Material Assentamento do Bloco "
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'CondutividadeAssentamento', payload: text})
-                }
-              />
+              /> */}
+              <View
+                style={{
+                  justifyContent: 'center',
+                  borderRadius: 15,
+                  borderWidth: 1,
+                  overflow: 'hidden',
+                  height: 50,
+                  backgroundColor: '#FFF',
+                  marginBottom: 20,
+                  marginTop: 10,
+                }}>
+                <Picker
+                  selectedValue={state.CondutividadeReboco}
+                  onValueChange={text =>
+                    dispatch({type: 'CondutividadeReboco', payload: text})
+                  }>
+                  <Picker.Item
+                    label="Escolha um Material do Reboco..."
+                    value=""
+                  />
+                  <Picker.Item label="Cimento" value={1.15} />
+                </Picker>
+              </View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  borderRadius: 15,
+                  borderWidth: 1,
+                  overflow: 'hidden',
+                  height: 50,
+                  backgroundColor: '#FFF',
+                  marginBottom: 20,
+                  marginTop: 10,
+                }}>
+                <Picker
+                  selectedValue={state.CondutividadeAssentamento}
+                  onValueChange={text =>
+                    dispatch({type: 'CondutividadeAssentamento', payload: text})
+                  }>
+                  <Picker.Item
+                    label="Escolha um Material do Assentamento..."
+                    value=""
+                  />
+                  <Picker.Item label="Cimento" value={1.15} />
+                </Picker>
+              </View>
 
               <TextInput
                 placeholder="Espessura Reboco Interno "

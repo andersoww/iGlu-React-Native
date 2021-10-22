@@ -11,11 +11,27 @@ import {TesteContext} from '../../providers';
 
 export default function ({navigation}) {
   const [project, setProject] = useState([]);
+  const [selected, SetSelected] = useState({id: '', nome: ''});
   const {refresh, setRefresh} = useContext(TesteContext);
+  async function criar() {
+    const realm = await getRealm();
+    realm.write(() => {
+      realm.create('Repository', {
+        id: '975f9101-fad2-4ce6-a353-sa03d6a432de',
+        nome: 'Bruno',
+        btu: 30000,
+        tr: 2,
+        cidade: 'Bebedouro',
+        estado: 'São Paulo',
+      });
+    });
+  }
   async function Remove() {
     const realm = await getRealm();
     realm.write(() => {
-      realm.deleteAll();
+      const myTask = realm.objectForPrimaryKey('Repository', selected.id);
+
+      realm.delete(myTask);
     });
     setRefresh(!refresh);
   }
@@ -46,7 +62,7 @@ export default function ({navigation}) {
           style={{backgroundColor: '#B0E0E6'}}
           size={40}
           onPress={() => {
-            Alert.alert('Confirmação', 'Apagar todos os projetos ?', [
+            Alert.alert('Confirmação', `Apagar o projeto ${selected.nome} ?`, [
               {
                 text: 'Cancelar',
                 onPress: () => {},
@@ -67,7 +83,7 @@ export default function ({navigation}) {
           style={{backgroundColor: '#B0E0E6'}}
           size={40}
           onPress={() => {
-            console.log(project[0].nome);
+            criar();
           }}
         />
       </Form>
@@ -77,7 +93,11 @@ export default function ({navigation}) {
         refresh={refresh}
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
-          <Repository onPress={() => console.log(item.nome)} data={item} />
+          <Repository
+            style={selected.id == item.id ? '#FF4F4F' : '#fff'}
+            onPress={() => SetSelected({id: item.id, nome: item.nome})}
+            data={item}
+          />
         )}
       />
     </Container>

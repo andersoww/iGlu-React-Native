@@ -1,10 +1,9 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.TouchableOpacity`
-  padding: 20px;
-  border-radius: 4px;
-  background: #fff;
   margin-bottom: 15px;
+  border-radius: 10px;
+  padding: 3px;
 `;
 
 export const Name = styled.Text`

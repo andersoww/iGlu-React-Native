@@ -43,6 +43,8 @@ export default function ({navigation}) {
       nome: repository.nome,
       btu: repository.btu,
       tr: repository.tr,
+      cidade: repository.cidade,
+      estado: repository.estado,
     };
     const realm = await getRealm();
     realm.write(() => {
@@ -63,6 +65,8 @@ export default function ({navigation}) {
           nome: infoInitial.Projeto,
           btu: Btu,
           tr: Tr,
+          cidade: infoInitial.Cidade,
+          estado:infoInitial.Estado
         };
 
         await saveRepository(x);

@@ -1,9 +1,11 @@
 export default class RepositorySchema {
   static schema = {
     name: 'Repository',
-    PrimaryKey:'id',
+    primaryKey:'id',
     properties: {
-      id:'string',
+      id:{type:'string'},
+      cidade:'string',
+      estado:'string',
       nome:'string',
       btu:'int',
       tr:'int'
