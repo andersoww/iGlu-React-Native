@@ -40,16 +40,13 @@ export default function ({navigation}) {
   };
   const [City, setCity] = useState([]);
   const [State, setState] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const showDialog = () => setVisible(true);
-
-  const hideDialog = () => setVisible(false);
 
   const [state, dispatch] = useReducer(reducer, {
     Projeto: '',
     Cidade: '',
     Estado: '',
     TemperaturaE: '',
+    TemperaturaI: '',
     Latitude: '',
     uuid: '',
   });
@@ -206,15 +203,27 @@ export default function ({navigation}) {
               </Picker>
             </View>
           </View>
-          <Title>Temperatura Externa do Projeto</Title>
+          <Title>Temperatura Interna e Externa</Title>
           <View
             style={{
               flexDirection: 'row',
+              justifyContent: 'center',
+              marginLeft:5
             }}>
             <TextInput
-              style={{width: 190}}
+              style={{width: 130, marginRight: 20}}
               keyboardType="numeric"
-              label="Temperatura Local do Dia"
+              label="Interna"
+              value={`${state.TemperaturaI}`}
+              onChangeText={text =>
+                dispatch({type: 'TemperaturaI', payload: text})
+              }
+            />
+
+            <TextInput
+              style={{width: 130}}
+              keyboardType="numeric"
+              label="Externa"
               value={`${state.TemperaturaE}`}
               onChangeText={text =>
                 dispatch({type: 'TemperaturaE', payload: text})
@@ -222,24 +231,25 @@ export default function ({navigation}) {
             />
             <IconButton
               style={{marginRight: 30, backgroundColor: '#B0E0E6'}}
-              icon="plus"
+              icon="magnify"
               onPress={() => {
                 Buscar();
               }}
             />
           </View>
+
           <Title>Latitude</Title>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row',marginLeft:5}}>
             <TextInput
               onChangeText={text => dispatch({type: 'Latitude', payload: text})}
               label="Latitude"
               keyboardType="numeric"
               value={`${state.Latitude}`}
-              style={{width: 190}}
+              style={{width: 130}}
             />
             <IconButton
               style={{backgroundColor: '#B0E0E6'}}
-              icon="crosshairs-gps"
+              icon="map-marker"
               onPress={getLocation}></IconButton>
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>

@@ -52,7 +52,7 @@ export default function ({navigation}) {
   async function HandleAddRepository() {
     if (
       Iluminacao != 0 &&
-      Parede != 0 &&
+      parede.Contador > 4 &&
       Equipamento != 0 &&
       Teto != 0 &&
       Pessoas != 0
@@ -96,7 +96,7 @@ export default function ({navigation}) {
               {
                 text: 'Cancelar',
                 onPress: () => {
-                  console.log(Btu);
+                  console.log(parede.Contador);
                 },
                 style: 'cancel',
               },

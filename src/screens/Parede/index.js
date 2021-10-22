@@ -62,7 +62,7 @@ export default function ({navigation}) {
     CondutividadeAssentamento: '',
     EspessuraRExterna: '',
     EspessuraRInterna: '',
-    TemperaturaInterna: '',
+    TemperaturaInterna: infoInitial.TemperaturaI,
     TemperaturaExterna: infoInitial.TemperaturaE,
   });
 
@@ -91,15 +91,15 @@ export default function ({navigation}) {
         const resposta = await calcular_parede.post('', Dados);
         const rest = resposta.data;
 
-        let total = (rest.resultado) + parede.valorT;
+        let total = rest.resultado + parede.valorT;
         console.log(rest);
         setParede({Contador: contador + 1, valorT: total});
 
         navigation.navigate('main');
-        Alert.alert(`Parede ${parede.Contador} calculada com sucesso`);
+        Alert.alert(`Parede ${contador} calculada com sucesso`);
       } catch (error) {
         Alert.alert('Você precisa informar todos os campos');
-        console.log(error)
+        console.log(error);
       }
     } else {
       Alert.alert('Limite Estourou ');
@@ -260,17 +260,7 @@ export default function ({navigation}) {
                 }
               />
             </View>
-            <View>
-              <Text>Temperatura:</Text>
 
-              <TextInput
-                placeholder="Temperatura Interna "
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'TemperaturaInterna', payload: text})
-                }
-              />
-            </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <IconButton
                 style={{backgroundColor: '#68E068'}}

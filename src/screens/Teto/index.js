@@ -30,7 +30,7 @@ export default function ({navigation}) {
     AreaPiso: '',
     Telha_id: '',
     ForroLaje_id: '',
-    TemperaturaInterna: '',
+    TemperaturaInterna: infoInitial.TemperaturaI,
     TemperaturaExterna: infoInitial.TemperaturaE,
   });
 
@@ -146,19 +146,6 @@ export default function ({navigation}) {
                   ))}
                 </Picker>
               </View>
-            </View>
-
-            <View>
-              <Text>Temperatura:</Text>
-
-              <TextInput
-                placeholder="Temperatura Interna"
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'TemperaturaInterna', payload: text})
-                }
-                style={{marginBottom: 10}}
-              />
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <IconButton
