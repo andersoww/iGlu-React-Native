@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useReducer, useState, useEffect, useContext} from 'react';
-import {Alert, Platform, View, PermissionsAndroid} from 'react-native';
+import {Alert, Platform, View, Keyboard, ScrollView} from 'react-native';
 import {
   Button,
   Card,
@@ -153,7 +153,9 @@ export default function ({navigation}) {
         <Appbar.Content title="iGlu" />
         <Appbar.Action icon="alert" onPress={() => {}} />
       </Appbar.Header>
-      <View style={{flex: 1, padding: 10}}>
+      <ScrollView
+        keyboardShouldPersistTaps="never"
+        style={{flex: 1, padding: 10}}>
         <Card style={{padding: 10, borderRadius: 10, marginBottom: 10}}>
           <Title>Nome do Projeto</Title>
           <TextInput
@@ -271,7 +273,7 @@ export default function ({navigation}) {
             />
           </View>
         </Card>
-      </View>
+      </ScrollView>
     </>
   );
 }

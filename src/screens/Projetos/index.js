@@ -62,22 +62,30 @@ export default function ({navigation}) {
           style={{backgroundColor: '#B0E0E6'}}
           size={40}
           onPress={() => {
-            Alert.alert('Confirmação', `Apagar o projeto ${selected.nome} ?`, [
-              {
-                text: 'Cancelar',
-                onPress: () => {},
-                style: 'cancel',
-              },
-              {
-                text: 'Sim',
-                onPress: () => {
-                  Remove();
-                },
-              },
-            ]);
+            if (selected.id != '') {
+              Alert.alert(
+                'Confirmação',
+                `Apagar o projeto ${selected.nome} ?`,
+                [
+                  {
+                    text: 'Cancelar',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Sim',
+                    onPress: () => {
+                      Remove();
+                    },
+                  },
+                ],
+              );
+            }else{
+              Alert.alert("Você precisa selecionar um Projeto")
+            }
           }}
         />
-        <IconButton
+        {/* <IconButton
           icon="history"
           color="white"
           style={{backgroundColor: '#B0E0E6'}}
@@ -85,7 +93,7 @@ export default function ({navigation}) {
           onPress={() => {
             criar();
           }}
-        />
+        /> */}
       </Form>
       <List
         keyboardShouldPersistTaps="handled"

@@ -52,7 +52,7 @@ export default function ({navigation}) {
       </Appbar.Header>
       <Container>
       <Card_Pessoas>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="never">
           <View>
             <Text>Tipo de Atividede</Text>
             <View style={{

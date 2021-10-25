@@ -84,7 +84,7 @@ export default function ({navigation}) {
       </Appbar.Header>
       <Container>
         <Card_Teto>
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps="never">
             <TextInput
               label="Área do comodo (m²):"
               placeholder="M²"

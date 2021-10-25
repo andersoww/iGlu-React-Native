@@ -96,7 +96,7 @@ export default function ({navigation}) {
         setParede({Contador: contador + 1, valorT: total});
 
         navigation.navigate('main');
-        Alert.alert(`Parede ${contador + 1} calculada com sucesso`);
+        Alert.alert(`Parede ${contador} calculada com sucesso`);
       } catch (error) {
         Alert.alert('Você precisa informar todos os campos');
         console.log(error);
@@ -113,10 +113,10 @@ export default function ({navigation}) {
     <>
       <Appbar.Header style={{backgroundColor: '#B0E0E6'}}>
         <Appbar.Content title="Paredes" />
-        <Appbar.Content title={`Faltam ${4 - parede.Contador}`} />
+        <Appbar.Content title={`Faltam ${5 - parede.Contador}`} />
       </Appbar.Header>
       <Container>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="never">
           <Card_Parede>
             <TextInput
               style={{height: 50}}

@@ -49,7 +49,7 @@ export default function ({navigation}) {
       </Appbar.Header>
       <Container>
       <Card_Iluminacao>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="never">
           <View>
 
             <TextInput

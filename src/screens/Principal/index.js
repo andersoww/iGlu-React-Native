@@ -52,13 +52,7 @@ export default function ({navigation}) {
     });
   }
   async function HandleAddRepository() {
-    if (
-      Iluminacao != 0 &&
-      parede.Contador > 4 &&
-      Equipamento != 0 &&
-      Teto != 0 &&
-      Pessoas != 0
-    ) {
+    if (Iluminacao != 0 && parede.Contador > 4 && Teto != 0 && Pessoas != 0) {
       try {
         const x = {
           uuid: infoInitial.uuid,
@@ -66,7 +60,7 @@ export default function ({navigation}) {
           btu: Btu,
           tr: Tr,
           cidade: infoInitial.Cidade,
-          estado:infoInitial.Estado
+          estado: infoInitial.Estado.nome,
         };
 
         await saveRepository(x);
@@ -100,7 +94,7 @@ export default function ({navigation}) {
               {
                 text: 'Cancelar',
                 onPress: () => {
-                  console.log(parede.Contador);
+                  console.log(infoInitial.Estado.nome);
                 },
                 style: 'cancel',
               },
