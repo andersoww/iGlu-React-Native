@@ -78,7 +78,7 @@ export default function ({navigation}) {
     if (state.Cidade && state.Estado != '') {
       try {
         const response = await axios.get(
-          `https://api.hgbrasil.com/weather?key=cc5354f2&city_name=${state.Cidade},${state.Estado.sigla}`,
+          `https://api.hgbrasil.com/weather?key=9d12d4ba&city_name=${state.Cidade},${state.Estado.sigla}`,
         );
         const res = response.data;
         const x = res.results.forecast[0].max;

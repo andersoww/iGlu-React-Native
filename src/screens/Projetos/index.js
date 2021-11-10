@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Alert, Keyboard} from 'react-native';
+import {Alert, Keyboard, ScrollView, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import getRealm from '../../services/realm';
@@ -17,7 +17,7 @@ export default function ({navigation}) {
     const realm = await getRealm();
     realm.write(() => {
       realm.create('Repository', {
-        id: '975f9101-fad2-4ce6-a353-sa03d6a432de',
+        id: '975f9101-fad2-4ce6-a353-sa13d6a434de',
         nome: 'Bruno',
         btu: 30000,
         tr: 2,
@@ -80,21 +80,13 @@ export default function ({navigation}) {
                   },
                 ],
               );
-            }else{
-              Alert.alert("Você precisa selecionar um Projeto")
+            } else {
+              Alert.alert('Você precisa selecionar um Projeto');
             }
           }}
         />
-        {/* <IconButton
-          icon="history"
-          color="white"
-          style={{backgroundColor: '#B0E0E6'}}
-          size={40}
-          onPress={() => {
-            criar();
-          }}
-        /> */}
       </Form>
+
       <List
         keyboardShouldPersistTaps="handled"
         data={project}
@@ -103,7 +95,6 @@ export default function ({navigation}) {
         renderItem={({item}) => (
           <Repository
             style={selected.id == item.id ? '#FF4F4F' : '#fff'}
-            onPress={() => SetSelected({id: item.id, nome: item.nome})}
             data={item}
           />
         )}

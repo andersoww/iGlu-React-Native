@@ -7,6 +7,7 @@ import {Api_bloco, calcular_parede} from '../../services/API';
 import {TesteContext} from '../../providers';
 
 import {Card_Parede, Container, Title_Parede} from './styles';
+import ListVidro from '../../components/ListVidro';
 
 export default function ({navigation}) {
   const {setParede, parede, infoInitial} = useContext(TesteContext);
@@ -185,59 +186,18 @@ export default function ({navigation}) {
           </View>
 
           {isSwitchOn && (
-            <Card_Parede>
-              <Text>Vidro:</Text>
-              <TextInput
-                label="Área Total de Vidro"
-                placeholder="M²"
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'AreaVidro', payload: text})
-                }
-              />
-
-              <View
-                style={{
-                  justifyContent: 'center',
-                  borderRadius: 15,
-                  borderWidth: 1,
-                  overflow: 'hidden',
-                  height: 50,
-                  backgroundColor: '#FFF',
-                  marginBottom: 20,
-                  marginTop: 10,
-                }}>
-                <Picker
-                  selectedValue={state.Orientacao}
-                  onValueChange={text =>
-                    dispatch({type: 'Orientacao', payload: text})
-                  }>
-                  <Picker.Item
-                    label="Escolha uma orientação do Vidro...."
-                    value=""
-                  />
-                  <Picker.Item label="Sul" value="S" />
-                  <Picker.Item label="Sudeste" value="SE" />
-                  <Picker.Item label="Leste" value="E" />
-                  <Picker.Item label="Nordeste" value="NE" />
-                  <Picker.Item label="Norte" value="N" />
-                  <Picker.Item label="Noroeste" value="NO" />
-                  <Picker.Item label="Oeste" value="O" />
-                  <Picker.Item label="Sudoeste" value="SO" />
-                </Picker>
-              </View>
-            </Card_Parede>
+            
+            <ListVidro
+              selectedValue={state.Orientacao}
+              onValueChange={text =>
+                dispatch({type: 'Orientacao', payload: text})
+              }
+            />
           )}
           <Card_Parede>
             <View>
               <Text>Reboco:</Text>
-              {/* <TextInput
-                placeholder="Condutividade do Reboco "
-                keyboardType="numeric"
-                onChangeText={text =>
-                  dispatch({type: 'CondutividadeReboco', payload: text})
-                }
-              /> */}
+
               <View
                 style={{
                   justifyContent: 'center',
