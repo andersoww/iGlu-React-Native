@@ -1,5 +1,5 @@
 <h1 align="center">
-<img alt="iGlu" title="iGlu" src="./logo iGlu.png" />
+<img alt="iGlu" title="iGlu" src="https://raw.githubusercontent.com/andersoww/iGlu-React-Native/main/logo%20iGlu.PNG?token=AQIWFUBZPB4YPPLSDDEWLLDBZZUKG" />
 <h1>
 
 <h1 align="center">iGlu - Calculo de Carga Térmica<h1>
